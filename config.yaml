@@ -1,0 +1,2 @@
+sourceDirectory: "./docs"
+buildDirectory: "./dist"

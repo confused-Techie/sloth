@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ./scripts/build.js"
   },
   "keywords": [],
   "author": "confused-Techie",
@@ -15,6 +16,14 @@
     "front-matter": "^4.0.2",
     "js-yaml": "^4.1.0",
     "markdown-it": "^13.0.1",
+    "markdown-it-attrs": "^4.1.6",
+    "markdown-it-emoji": "^2.0.2",
+    "markdown-it-expandable": "^1.0.2",
+    "markdown-it-fontawesome": "^0.3.0",
+    "markdown-it-highlightjs": "^4.0.1",
+    "markdown-it-include": "^2.0.0",
+    "markdown-it-kbd": "^2.2.2",
+    "markdown-it-named-code-blocks": "^0.1.0",
     "react-dom": "^18.2.0"
   }
 }
