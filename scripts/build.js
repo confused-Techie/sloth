@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const ejs = require("ejs");
 const MarkdownIt = require("markdown-it");
+const markdownItContainer = require("markdown-it-container");
 const fm = require("front-matter");
 const yaml = require("js-yaml");
 
@@ -26,6 +27,14 @@ let md = new MarkdownIt({
 }).use(require("markdown-it-emoji"), { // emoji support
 
 }).use(require("markdown-it-fontawesome") // font awesome support
+).use(require("markdown-it-ins") // ins support
+).use(require("./markdown-it-del.js") // del support
+).use(require("markdown-it-sub") // Subscript support
+).use(require("markdown-it-sup") // super script support
+).use(markdownItContainer,  // container block support
+  "warning" // Each supported info block has to be created seperately
+).use(markdownItContainer,
+  "info"
 );
 
 let config;

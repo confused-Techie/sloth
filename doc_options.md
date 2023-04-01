@@ -113,6 +113,9 @@ Which allows you to specify an EJS template to include into the page.
 
 Again requires specifying the full path from the root of the repo.
 
+A note, the EJS script that's imported should not use any variables as they will
+not retain the context, and will be parsed as standard HTML.
+
 ```markdown
 !!!includeEJS(views/partials/simple.ejs)!!!
 ```
@@ -191,3 +194,57 @@ Hello World! :fa-flag:
 
 - [:fa-google: Google](https://www.google.com/)
 ```
+
+## `markdown-it-sub`
+
+* [NPM](https://www.npmjs.com/package/markdown-it-sub)
+* [GitHub](https://github.com/markdown-it/markdown-it-sub)
+
+Markdown-it plugin providing subscript support.
+
+`H~2~0` => `H<sub>2</sub>0`
+
+## `markdown-it-sup`
+
+* [NPM](https://www.npmjs.com/package/markdown-it-sup)
+* [GitHub](https://github.com/markdown-it/markdown-it-sup)
+
+Markdown-it plugin for Superscript support.
+
+`29^th^` => `29<sup>th</sup>`
+
+## `markdown-it-container`
+
+* [NPM](https://www.npmjs.com/package/markdown-it-container)
+* [GitHub](https://github.com/markdown-it/markdown-it-container)
+
+Markdown-it plugin for creating block-level custom containers.
+
+Each supported container has to be created individually.
+
+```markdown
+::: info
+Some Text
+:::
+```
+
+Supported container types:
+* `info`
+* `warning`
+
+## `markdown-it-ins`
+
+* [NPM](https://www.npmjs.com/package/markdown-it-ins)
+* [GitHub](https://github.com/markdown-it/markdown-it-ins)
+
+Markdown-it plugin for `<ins>` support.
+
+`++inserted++` => `<ins>inserted</ins>`
+
+## `markdown-it-del`
+
+Custom plugin, that lives `./scripts/markdown-it-del.js`.
+
+Mirrored from `markdown-it-ins` supports the `<del>` element.
+
+`--deleted--` => `<del>deleted</del>`

@@ -26,3 +26,10 @@ console.log("Hello world");
 :smiley:
 
 - [:fa-google: Google](https://www.google.com/)
+
+::: info
+Some text
+:::
+
+++Inserted++
+--Deleted--
