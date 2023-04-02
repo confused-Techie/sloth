@@ -1,7 +1,6 @@
 ---
 view: home
-page:
-  name: Home Page
+title: Home Page
 ---
 
 # Hello World!
@@ -33,3 +32,5 @@ Some text
 
 ++Inserted++
 --Deleted--
+
+Hello World

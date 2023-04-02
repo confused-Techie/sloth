@@ -5,14 +5,26 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ./scripts/build.js"
+    "start": "node ./scripts/dev.js",
+    "build": "npm run content:build && npm run tailwind:build && npm run mini:css && npm run mini:js && npm run content:copy",
+    "start:dev": "concurrently -n tailwind,node,content,minijs,minicss,copy -c blue,cyan,yellow,red,magenta,gray 'npm:tailwind:watch' 'npm:start' 'npm:content:watch' 'npm:mini:js' 'npm:mini:css' 'npm:content:copy'",
+    "tailwind:build": "tailwindcss -i ./assets/css/site.css -o ./dist/site.css",
+    "tailwind:watch": "tailwindcss -i ./assets/css/site.css -o ./dist/site.css --watch",
+    "content:build": "node ./scripts/build.js",
+    "content:watch": "nodemon ./scripts/build.js",
+    "content:copy": "node ./scripts/copy.js",
+    "mini:js": "minify ./assets/js/site.js > ./dist/site.min.js",
+    "mini:css": "minify ./dist/site.css > ./dist/site.min.css"
   },
   "keywords": [],
   "author": "confused-Techie",
   "license": "MIT",
+  "nodemonConfig": {
+    "ext": "js,json,md,ejs"
+  },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.9",
     "ejs": "^3.1.9",
-    "esbuild": "^0.17.14",
     "front-matter": "^4.0.2",
     "js-yaml": "^4.1.0",
     "markdown-it": "^13.0.1",
@@ -28,6 +40,12 @@
     "markdown-it-named-code-blocks": "^0.1.0",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
-    "react-dom": "^18.2.0"
+    "minify": "^9.2.0",
+    "tailwindcss": "^3.3.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22"
   }
 }

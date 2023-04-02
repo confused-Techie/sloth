@@ -49,7 +49,7 @@ async function main() {
 
 async function getConfig() {
   try {
-    const doc = yaml.load(fs.readFileSync('./config.yaml', "utf8"));
+    const doc = yaml.load(fs.readFileSync("./config.yaml", "utf8"));
 
     return doc;
 

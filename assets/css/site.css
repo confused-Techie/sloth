@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #0d1117;
+  --primary: #58a6ff;
+  --accent: #161b22;
+  --secondary: rgba(255, 255, 255, 0.1);
+  --text: #c9d1d9;
+  --header-text: var(--text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold;
+}
