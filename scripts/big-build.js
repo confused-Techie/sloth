@@ -26,6 +26,7 @@ async function main() {
   config = await getConfig();
 
   // TODO: Empty build folder
+  fs.rmSync(config.buildDirectory, { recursive: true, force: true });
 
   // Check if our build folder exists, or create it
   await createIfDirAbsent(config.buildDirectory);
@@ -40,7 +41,7 @@ async function main() {
     }
 
     // Write out HTML to the build dir
-    fs.writeFileSync(path.join(config.buildDirectory, ...pathArray, `${file.replace(".md", ".html")}`), content, {
+    fs.writeFileSync(path.join(config.buildDirectory, ...pathArray, `${filename.replace(".md", ".html")}`), content, {
       encoding: "utf8",
       flag: "w"
     });
@@ -61,12 +62,12 @@ async function main() {
     if (typeof staticDir === "string") {
 
       await enumerateFiles(staticDir, [], config.staticBuildDirectory, (file, pathArray, filename) => {
-        fs.copyFileSync(file, path.join(staticDir, ...pathArray, file));
+        fs.copyFileSync(file, path.join(staticDir, ...pathArray, filename));
       });
 
     } else if (typeof staticDir === "object") {
       await enumerateFiles(staticDir.from, [], staticDir.to, (file, pathArray, filename) => {
-        fs.copyFileSync(file, path.join(staticDir.from, ...pathArray, file));
+        fs.copyFileSync(file, path.join(staticDir.from, ...pathArray, filename));
       });
     }
   }
@@ -78,7 +79,7 @@ async function main() {
 
   await createIfDirAbsent(config.jsBuildDirectory);
 
-  await enumerateFiles(config.jsSourceDirectory, [], config.jsSourceDirectory, (file, pathArray, filename) => {
+  await enumerateFiles(config.jsSourceDirectory, [], config.jsBuildDirectory, (file, pathArray, filename) => {
 
     let content = fs.readFileSync(file, "utf8");
 
@@ -91,26 +92,26 @@ async function main() {
 
       if (typeof tmpMinifyOptions.sourceMap !== "object") {
         tmpMinifyOptions.sourceMap = {
-          filename: file,
-          url: `${file.replace(".js", ".js.map")}`
+          filename: filename,
+          url: `${filename.replace(".js", ".js.map")}`
         };
       }
 
       let output = await minify(content, config.jsMinifyOptions);
 
-      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${file.replace(".js", ".min.js")}`), output.code, {
+      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".min.js")}`), output.code, {
         encoding: "utf8",
         flag: "w"
       });
 
-      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${file.replace(".js", ".js.map")}`), output.map, {
+      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".js.map")}`), output.map, {
         encoding: "utf8",
         flag: "w"
       });
     } else {
       let output = await minify(contnet, config.jsMinifyOptions);
 
-      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${file.replace(".js", ".min.js")}`), output.code, {
+      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".min.js")}`), output.code, {
         encoding: "utf8",
         flag: "w"
       });
@@ -125,9 +126,51 @@ async function main() {
   // - https://github.com/postcss/postcss#usage
   // Use PostCSS to access a JavaScript API for tailwindcss, write results.
   // Plus maybe PostCSS adds cool new features
-  
-  // 5) Minify CSS
 
+  // 5) Minify CSS
+  config.cssBuildDirectory ??= config.buildDirectory;
+  config.cssSourceDirectory ??= "./assets/css";
+  config.cssMinifyOptions ??= {};
+
+  await createIfDirAbsent(config.cssBuildDirectory);
+
+  await enumerateFiles(config.cssSourceDirectory, [], config.cssBuildDirectory, (file, pathArray, filename) => {
+    let content = fs.readFileSync(file, "utf8");
+
+    if (content.length < 1) {
+      continue;
+    }
+
+    if (config.cssMinifyGenerateSourceMap) {
+      let tmpMinifyOptions = config.cssMinifyOptions;
+
+      if (typeof tmpMinifyOptions.sourceMap !== "boolean") {
+        tmpMinifyOptions.sourceMap = true;
+      }
+
+      let output = new CleanCSS(tmpMinifyOptions).minify(content);
+
+      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, `${filename.replace(".css", ".min.css")}`), output.styles, {
+        encoding: "utf8",
+        flag: "w"
+      });
+
+      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, `${filename.replace(".css", ".css.map")}`), output.sourceMap, {
+        encoding: "utf8",
+        flag: "w"
+      });
+
+    } else {
+      let output = new CleanCSS(config.cssMinifyOptions).minify(content);
+
+      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, `${filename.replace(".css", ".min.css")}`), output.styles, {
+        encoding: "utf8",
+        flag: "w"
+      });
+    }
+  });
+
+  return;
 }
 
 async function enumerateFiles(dir, pathArray, dest, fileCallback) {
