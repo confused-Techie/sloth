@@ -13,7 +13,7 @@
     "content:build": "node ./scripts/build.js",
     "content:watch": "nodemon ./scripts/build.js",
     "content:copy": "node ./scripts/copy.js",
-    "mini:js": "minify ./assets/js/site.js > ./dist/site.min.js",
+    "mini:js": "node ./scripts/minify-js.js",
     "mini:css": "minify ./dist/site.css > ./dist/site.min.css"
   },
   "keywords": [
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.9",
+    "clean-css": "^5.3.2",
     "cross-env": "^7.0.3",
     "ejs": "^3.1.9",
     "front-matter": "^4.0.2",
@@ -44,7 +45,8 @@
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "minify": "^9.2.0",
-    "tailwindcss": "^3.3.1"
+    "tailwindcss": "^3.3.1",
+    "terser": "^5.16.8"
   },
   "devDependencies": {
     "concurrently": "^8.0.1",

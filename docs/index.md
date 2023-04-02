@@ -24,7 +24,7 @@ console.log("Hello world");
 
 :smiley:
 
-- [:fa-google: Google](https://www.google.com/)
+:fa-flag:
 
 ::: info
 Some text
@@ -34,3 +34,5 @@ Some text
 --Deleted--
 
 Hello World
+
+![Alt Text](/images/test.png)

@@ -30,8 +30,8 @@ When the `npm run build` script is executed the following happens:
 
 * `tailwindcss` is used to convert your `site.css` file from `./assets/css/site.css` into a proper CSS file and places it into `./dist/site.css`.
 * `minify` is used to minify some files and place them into the appropriate directories.
-  - Minifying `./assets/js/site.js` and placing it into `./dist/site.min.js`
   - Minifying `./dist/site.css` and placing it into `./dist/site.min.css`
+* Executes `./scripts/minify-js.js` to minify your JavaScript files. Enumerating each file based on your config.
 * Executes the above mentioned build process on all Markdown.
 * Additionally executes the `./scripts/copy.js` file, which copies some data from your `./assets` folder to the `./dist` folder.
   - Copies `./assets/img` content to `./dist/images/`
@@ -45,6 +45,14 @@ When developing the site you can run `npm run start:dev` which will kick off the
 
 And any changes from Markdown, CSS, JavaScript, and EJS will only need a simple refresh to take effect. You can even modify the build script for the whole site, and it will be automatically refreshed to show your changes.
 
+### Other Projects Used
+
+* [Tailwindcss](https://tailwindcss.com/) is used to build sitewide CSS off all CSS files used.
+* [Tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin) plugin provides quality typographic defaults.
+* [EJS](https://ejs.co/#promo) is used for templating HTML documents.
+* [Terser](https://github.com/terser/terser) is used to minify JavaScript. With [any and all options](https://github.com/terser/terser#minify-options) supported in the config.
+* [CleanCSS](https://github.com/clean-css/clean-css) is used to minify CSS. With [any and all options](https://github.com/clean-css/clean-css#constructor-options) supported in the config.
+
 ## Structure
 
 * `views/` contains your EJS templates. When using includes within a template it's best to use a path from the root of the repo.
@@ -53,7 +61,7 @@ And any changes from Markdown, CSS, JavaScript, and EJS will only need a simple 
 * `docs/` The recommended location to place your markdown files. This can be changed via your `config.yaml` `sourceDirectory` config.
 * `assets/` The location for all asset files to be placed.
 * `assets/css/` The folder for your `site.css`
-* `assets/js/` The folder for your `site.js`
+* `assets/js/` The recommend folder for your JavaScript files. This can be changed via your `config.yaml` `jsSourceDirectory` config.
 * `assets/img/` The folder for images to be placed.
 * `assets/static/` The folder for static data to be placed.
 * `scripts/` The folder that contains build process tooling.
@@ -79,6 +87,12 @@ Within it there are a few values used to direct the whole the process:
 * `sourceDirectory` The string path of where your Markdown documents reside.
 * `buildDirectory` The string path of where to place your built files.
 * `devPort` An optional numeric port to use when running the developer browser.
+
+Additionally there are a few values related to building your JavaScript:
+* `jsSourceDirectory` The string path of where your JavaScript files reside. Defaults to `./assets/js`.
+* `jsBuildDirectory` The string path of where to place your minified JavaScript. Defaults to `buildDirectory`.
+* `jsMinifyGenerateSourceMap` A boolean value, which if true will automatically configure the source map configuration for `terser`.
+* `jsMinifyOptions` An object that will be directly passed to `terser` to control how JavaScript files are minified.
 
 ## EJS Templates
 
