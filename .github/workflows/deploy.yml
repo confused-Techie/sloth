@@ -26,6 +26,9 @@ jobs:
     - name: Build Site
       run: npm run build
 
+    - name: Remove Dist from Ignore
+      run: node ./scripts/reveal-dist.js
+
     - name: Deploy to GitHub Pages
       uses: stefanzweifel/git-auto-commit-action@v4
       with:

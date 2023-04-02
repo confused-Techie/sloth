@@ -1,3 +1,4 @@
 sourceDirectory: "./docs"
 buildDirectory: "./dist"
 devPort: 8080
+buildAsInIgnore: "dist/"
