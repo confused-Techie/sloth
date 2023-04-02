@@ -79,7 +79,6 @@ Within it there are a few values used to direct the whole the process:
 * `sourceDirectory` The string path of where your Markdown documents reside.
 * `buildDirectory` The string path of where to place your built files.
 * `devPort` An optional numeric port to use when running the developer browser.
-* `buildAsInIgnore` A string that should match exactly how your build file is located in your `.gitignore` file. If it isn't then leave an empty string.
 
 # Supported Markdown Extensions
 
