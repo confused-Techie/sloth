@@ -4,7 +4,7 @@ const ejs = require("ejs");
 const MarkdownIt = require("markdown-it");
 const markdownItContainer = require("markdown-it-container");
 const fm = require("front-matter");
-const yaml = require("js-yaml");
+const getConfig = require("./get-config.js");
 
 let md = new MarkdownIt({
   html: true
@@ -52,17 +52,6 @@ async function main() {
   return;
 }
 
-async function getConfig() {
-  try {
-    const doc = yaml.load(fs.readFileSync("./config.yaml", "utf8"));
-
-    return doc;
-
-  } catch(err) {
-    throw new Error(err);
-  }
-}
-
 async function enumerateFiles(dir, pathArray) {
 
   let files = fs.readdirSync(dir);
@@ -71,7 +60,6 @@ async function enumerateFiles(dir, pathArray) {
     let target = path.join(dir, file);
 
     if (fs.lstatSync(target).isDirectory()) {
-
       // now we can create a folder in the target directory,
       // then enumerate within that dir
       if (!fs.existsSync(path.join(config.buildDirectory, ...pathArray, file))) {
@@ -85,7 +73,7 @@ async function enumerateFiles(dir, pathArray) {
       let content = await generateHTML(target);
 
       if (typeof content === "boolean" && !false) {
-        return;
+        continue;
       }
 
       // then write file in target dir
@@ -98,6 +86,7 @@ async function enumerateFiles(dir, pathArray) {
 }
 
 async function generateHTML(file) {
+  console.log(`Generating HTML for ${file}`);
 
   const mdFile = fs.readFileSync(file, "utf8");
 

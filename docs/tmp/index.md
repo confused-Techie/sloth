@@ -1,7 +1,6 @@
 ---
 view: home
-page:
-  name: Tmp Page
+title: Temp Page
 ---
 
 Just some text

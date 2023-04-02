@@ -1,7 +1,7 @@
 {
   "name": "pulsar-docs",
   "version": "1.0.0",
-  "description": "",
+  "description": "Proof of Concept: The laziest and least opinionated Static Site Builder",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,7 @@
     "mini:js": "minify ./assets/js/site.js > ./dist/site.min.js",
     "mini:css": "minify ./dist/site.css > ./dist/site.min.css"
   },
-  "keywords": [],
+  "keywords": [ "static-site-builder" ],
   "author": "confused-Techie",
   "license": "MIT",
   "nodemonConfig": {

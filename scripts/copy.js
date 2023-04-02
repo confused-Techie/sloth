@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const yaml = require("js-yaml");
+const getConfig = require("./get-config.js");
 
 let config;
 
@@ -17,15 +17,6 @@ async function main() {
   await enumerateFiles(imgLoc, "./assets/img", []);
   await enumerateFiles(config.buildDirectory, "./assets/static", []);
   return;
-}
-
-async function getConfig() {
-  try {
-    const doc = yaml.load(fs.readFileSync("./config.yaml", "utf8"));
-    return doc;
-  } catch(err) {
-    throw new Error(err);
-  }
 }
 
 async function enumerateFiles(dest, dir, pathArray) {
