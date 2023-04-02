@@ -35,3 +35,4 @@ jobs:
         commit_message: Update GH Pages Site
         branch: gh-pages
         create_branch: true
+        repository: "./dist"
