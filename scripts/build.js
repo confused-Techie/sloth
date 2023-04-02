@@ -5,6 +5,7 @@ const MarkdownIt = require("markdown-it");
 const markdownItContainer = require("markdown-it-container");
 const fm = require("front-matter");
 const getConfig = require("./get-config.js");
+const DEV_MODE = process.env.NODE_ENV === "development" ? true : false;
 
 let md = new MarkdownIt({
   html: true
@@ -102,7 +103,7 @@ async function generateHTML(file) {
 
   const page = await ejs.renderFile(
     path.join("views", "pages", `${frontMatter.attributes.view}.ejs`),
-    { ...frontMatter.attributes, content: html }
+    { ...frontMatter.attributes, content: html, DEV_MODE: DEV_MODE }
   );
 
   return page;

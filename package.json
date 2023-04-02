@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./scripts/dev.js",
     "build": "npm run content:build && npm run tailwind:build && npm run mini:css && npm run mini:js && npm run content:copy",
-    "start:dev": "concurrently -n tailwind,node,content,minijs,minicss,copy -c blue,cyan,yellow,red,magenta,gray 'npm:tailwind:watch' 'npm:start' 'npm:content:watch' 'npm:mini:js' 'npm:mini:css' 'npm:content:copy'",
+    "start:dev": "cross-env NODE_ENV=development concurrently -n tailwind,node,content,minijs,minicss,copy -c blue,cyan,yellow,red,magenta,gray 'npm:tailwind:watch' 'npm:start' 'npm:content:watch' 'npm:mini:js' 'npm:mini:css' 'npm:content:copy'",
     "tailwind:build": "tailwindcss -i ./assets/css/site.css -o ./dist/site.css",
     "tailwind:watch": "tailwindcss -i ./assets/css/site.css -o ./dist/site.css --watch",
     "content:build": "node ./scripts/build.js",
@@ -16,7 +16,9 @@
     "mini:js": "minify ./assets/js/site.js > ./dist/site.min.js",
     "mini:css": "minify ./dist/site.css > ./dist/site.min.css"
   },
-  "keywords": [ "static-site-builder" ],
+  "keywords": [
+    "static-site-builder"
+  ],
   "author": "confused-Techie",
   "license": "MIT",
   "nodemonConfig": {
@@ -24,6 +26,7 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.9",
+    "cross-env": "^7.0.3",
     "ejs": "^3.1.9",
     "front-matter": "^4.0.2",
     "js-yaml": "^4.1.0",
