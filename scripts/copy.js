@@ -9,6 +9,11 @@ async function main() {
 
   let imgLoc = path.resolve(config.buildDirectory, "images");
 
+  // build target image directory if it doesn't exist
+  if (!fs.existsSync(imgLoc)) {
+    fs.mkdirSync(imgLoc);
+  }
+
   await enumerateFiles(imgLoc, "./assets/img", []);
   await enumerateFiles(config.buildDirectory, "./assets/static", []);
   return;
