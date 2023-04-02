@@ -80,6 +80,14 @@ Within it there are a few values used to direct the whole the process:
 * `buildDirectory` The string path of where to place your built files.
 * `devPort` An optional numeric port to use when running the developer browser.
 
+## EJS Templates
+
+Your EJS templates are largely the same as you'd find in any other setup. The most important notes:
+
+* You can check if `DEV_MODE` is true or false to change your `dist` output from when running locally or when building the application for production.
+* Any variables you need to build a specific instance of a page is defined via the frontmatter of your Markdown document.
+* To access the main Markdown Body as HTML within an EJS template simply use `<%- content %>` to apply it to the page.
+
 # Supported Markdown Extensions
 
 ## `markdown-it-include`
