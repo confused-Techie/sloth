@@ -44,7 +44,7 @@ async function main() {
   config = await getConfig();
 
   // Lets add a quick check here to create the dist folder if it doesn't exist.
-  if (!fs.existsSync(config.buildDirectory) {
+  if (!fs.existsSync(config.buildDirectory)) {
     fs.mkdirSync(config.buildDirectory);
   }
 
