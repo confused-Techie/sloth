@@ -23,7 +23,7 @@ Which follows a scrict lifecycle.
 1) HTML content is generated using Markdown, and EJS Templates.
 2) Static Files are copied over according to your `staticSourceDirectory` config.
 3) JavaScript is minified and placed in the build directory.
-4) CSS is processed by `PostCSS` which utilizes `tailwindcss` as a plugin to apply all transformations while it's written to your build directory. Once complete, `CleanCSS` is used to minify the source file and write those to your build directory as well.
+4) CSS is processed using `SCSS` and written to disk. Which is then minified using `CleanCSS`.
 
 The majority of what's done in this lifecycle is then controlled by the `site.config.js` file, pointing out which directories contain what.
 
