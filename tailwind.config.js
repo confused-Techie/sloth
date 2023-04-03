@@ -24,7 +24,7 @@ module.exports = {
             },
             color: "var(--text)",
             a: { color: "Var(--text)" },
-            colde: {
+            code: {
               color: "var(--text)",
               "font-weight": "5000"
             },

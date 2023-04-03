@@ -13,31 +13,19 @@ So that's why this Proof of Concept has been created. This static site builder i
 
 It's only focus is taking your raw data and turning it into a website. If you want cool features, then you'll need to implement them.
 
----
+## Building
 
-When you ask the `./scripts/build.js` script to create your website it does the following:
+When you run `npm run build` it'll run the `./scripts/build.js` script, which then orchestrates the whole build process between all tools.
 
-* Mirrors the data structure of folders and files from `./docs/` into `./dist/`.
-* Takes all markdown documents (that contain a front matter) and turns them into HTML documents, saving them with the same name, in the same directory.
-* When converting your markdown documents into HTML, a number of plugins will be used when doing so to enable support for as massive a feature set as possible.
-* Once your markdown is converted into HTML, it will be combined with your EJS view from `./views` based on the view specified in the markdown frontmatter.
+Which follows a scrict lifecycle.
 
-That it. The build script here is rather very simple, just converting data with the help of an army of `markdown-it` plugins.
+0) The Build Folder is completely emptied.
+1) HTML content is generated using Markdown, and EJS Templates.
+2) Static Files are copied over according to your `staticSourceDirectory` config.
+3) JavaScript is minified and placed in the build directory.
+4) CSS is processed by `PostCSS` which utilizes `tailwindcss` as a plugin to apply all transformations while it's written to your build directory. Once complete, `CleanCSS` is used to minify the source file and write those to your build directory as well.
 
-The other features come from other tools used alongside this.
-
-When the `npm run build` script is executed the following happens:
-
-* `tailwindcss` is used to convert your `site.css` file from `./assets/css/site.css` into a proper CSS file and places it into `./dist/site.css`.
-* `minify` is used to minify some files and place them into the appropriate directories.
-  - Minifying `./dist/site.css` and placing it into `./dist/site.min.css`
-* Executes `./scripts/minify-js.js` to minify your JavaScript files. Enumerating each file based on your config.
-* Executes the above mentioned build process on all Markdown.
-* Additionally executes the `./scripts/copy.js` file, which copies some data from your `./assets` folder to the `./dist` folder.
-  - Copies `./assets/img` content to `./dist/images/`
-  - Copies `./assets/static` content to `./dist/` (Purposefully at the root directory of `./dist` since it's recommended to place `robots.txt` and such in the static folder.)
-
-With this process you can turn some simple CSS, JS, EJS Views, and Markdown into a fully properly structured site of HTML, minified JavaScript, and minified CSS.
+The majority of what's done in this lifecycle is then controlled by the `site.config.js` file, pointing out which directories contain what.
 
 ## Developing
 
@@ -45,7 +33,7 @@ When developing the site you can run `npm run start:dev` which will kick off the
 
 And any changes from Markdown, CSS, JavaScript, and EJS will only need a simple refresh to take effect. You can even modify the build script for the whole site, and it will be automatically refreshed to show your changes.
 
-### Other Projects Used
+## Other Projects Used
 
 * [Tailwindcss](https://tailwindcss.com/) is used to build sitewide CSS off all CSS files used.
 * [Tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin) plugin provides quality typographic defaults.
@@ -54,17 +42,9 @@ And any changes from Markdown, CSS, JavaScript, and EJS will only need a simple 
 * [CleanCSS](https://github.com/clean-css/clean-css) is used to minify CSS. With [any and all options](https://github.com/clean-css/clean-css#constructor-options) supported in the config.
 * [PostCSS](https://github.com/postcss/postcss) is used to process your CSS file and hand it off to tailwindcss. While also allowing additional plugins to be used.
 
-## Lifecycle
+## Recommended Structure
 
-The build process follows a strict lifecycle, that you can use to your advantage.
-
-0) The Build Folder is completely emptied.
-1) HTML content is generated using Markdown, and EJS Templates.
-2) Static Files are copied over according to your `staticSourceDirectory` config.
-3) JavaScript is minified and placed in the build directory.
-4) CSS is processed by `PostCSS` which utilizes `tailwindcss` as a plugin to apply all transformations while it's written to your build directory. Once complete, `CleanCSS` is used to minify the source file and write those to your build directory as well.
-
-## Structure
+The below is what's recommended to make things obvious to multiple people. But is all optional, and can be modified however you'd like.
 
 * `views/` contains your EJS templates. When using includes within a template it's best to use a path from the root of the repo.
 * `views/pages/` contains full pages for an EJS template. When writing a Markdown file and specifying the EJS template to use, it must be a full page from this directory.
@@ -76,18 +56,7 @@ The build process follows a strict lifecycle, that you can use to your advantage
 * `assets/img/` The folder for images to be placed.
 * `assets/static/` The folder for static data to be placed.
 * `scripts/` The folder that contains build process tooling.
-* `config.yaml` The configuration file of the build process.
-
-## Markdown Frontmatter
-
-Your frontmatter of your Markdown documents is important, and directs some aspects of the build process.
-
-It's important to remember that a file will only be assumed to be a valid HTML page, if it contains frontmatter data. If the frontmatter is not included, it's assumed that it should not be in the final output, and is part of a markdown fragment.
-
-When writing your Frontmatter some important notes:
-* No key of your frontmatter can be named `content` this is the key the body of your markdown is assigned when handed to the EJS templating engine.
-* The data in your frontmatter is available to the EJS templating engine, so that placing a frontmatter field of `title: Hello World` is then available within an EJS view as `<%=title%>`.
-* Any valid YAML may exist within your frontmatter, providing as many features as you'd like to your EJS template.
+* `site.config.js` The configuration file of the build process.
 
 ## Config File
 
@@ -104,6 +73,17 @@ Additionally there are a few values related to building your JavaScript:
 * `jsBuildDirectory` The string path of where to place your minified JavaScript. Defaults to `buildDirectory`.
 * `jsMinifyGenerateSourceMap` A boolean value, which if true will automatically configure the source map configuration for `terser`.
 * `jsMinifyOptions` An object that will be directly passed to `terser` to control how JavaScript files are minified.
+
+## Markdown Frontmatter
+
+Your frontmatter of your Markdown documents is important, and directs some aspects of the build process.
+
+It's important to remember that a file will only be assumed to be a valid HTML page, if it contains frontmatter data. If the frontmatter is not included, it's assumed that it should not be in the final output, and is part of a markdown fragment.
+
+When writing your Frontmatter some important notes:
+* No key of your frontmatter can be named `content` this is the key the body of your markdown is assigned when handed to the EJS templating engine.
+* The data in your frontmatter is available to the EJS templating engine, so that placing a frontmatter field of `title: Hello World` is then available within an EJS view as `<%=title%>`.
+* Any valid YAML may exist within your frontmatter, providing as many features as you'd like to your EJS template.
 
 ## EJS Templates
 
