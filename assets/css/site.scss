@@ -1,7 +1,6 @@
-$font-stack: Helvetica, sans-serif;
-$primary-color: #333;
+@use 'base';
 
-body {
-  font: 100% $font-stack;
-  color: $primary-color;
+.inverse {
+  background-color: base.$primary-color;
+  color: white;
 }
