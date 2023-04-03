@@ -35,12 +35,11 @@ And any changes from Markdown, CSS, JavaScript, and EJS will only need a simple 
 
 ## Other Projects Used
 
-* [Tailwindcss](https://tailwindcss.com/) is used to build sitewide CSS off all CSS files used.
-* [Tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin) plugin provides quality typographic defaults.
 * [EJS](https://ejs.co/#promo) is used for templating HTML documents.
+* [SASS](https://sass-lang.com/) is used to process all SCSS files and create CSS from them.
 * [Terser](https://github.com/terser/terser) is used to minify JavaScript. With [any and all options](https://github.com/terser/terser#minify-options) supported in the config.
 * [CleanCSS](https://github.com/clean-css/clean-css) is used to minify CSS. With [any and all options](https://github.com/clean-css/clean-css#constructor-options) supported in the config.
-* [PostCSS](https://github.com/postcss/postcss) is used to process your CSS file and hand it off to tailwindcss. While also allowing additional plugins to be used.
+* [Markdown-IT](https://github.com/markdown-it/markdown-it) is used to process markdown documents.
 
 ## Recommended Structure
 
@@ -64,15 +63,32 @@ The configuration of the build script is located in `config.yaml` in the root of
 
 Within it there are a few values used to direct the whole the process:
 
-* `sourceDirectory` The string path of where your Markdown documents reside.
-* `buildDirectory` The string path of where to place your built files.
-* `devPort` An optional numeric port to use when running the developer browser.
+* `sourceDirectory`: <string> The path to your source Markdown documents.
+* `buildDirectory`: <string> The path of where to place markdown documents.
+* `devPort`: <integer> The port of which to run the dev server on.
+* `jsBuildDirectory`: <string> The path of where to place JavaScript files. Defaults to `buildDirectory`.
+* `jsSourceDirectory`: <string> The path to your JavaScript source files. Defaults to `./assets/js`.
+* `jsMinifyGenerateSourceMap`: <boolean> Whether or not to generate a source map for minified files.
+* `jsMinifyOptions`: <object> The options that will be passed directly to `terser`.
+* `cssBuildDirectory`: <string> The path of where to place CSS files. Defaults to `buildDirectory`.
+* `cssSourceDirectory`: <string> The path to your SCSS files. Defaults to `./assets/css`.
+* `cssMinifyGenerateSourceMap`: <boolean> Whether or not to generate a source map for minified files.
+* `cssMinifyOptions`: <object> The options that will be passed directly to `CleanCSS`.
+* `staticBuildDirectory`: <string> The path to place static files.
+* `staticSourceDirectory`: <*> This field is used to direct how any static files move from one directory to another.
 
-Additionally there are a few values related to building your JavaScript:
-* `jsSourceDirectory` The string path of where your JavaScript files reside. Defaults to `./assets/js`.
-* `jsBuildDirectory` The string path of where to place your minified JavaScript. Defaults to `buildDirectory`.
-* `jsMinifyGenerateSourceMap` A boolean value, which if true will automatically configure the source map configuration for `terser`.
-* `jsMinifyOptions` An object that will be directly passed to `terser` to control how JavaScript files are minified.
+  This could be any of the following:
+    - A string of a path.
+    - An array of strings of paths.
+    - An array of objects each with a `to` and `from` keys specifiying where a file should move `to` and where `from`.
+      The `to` and `from` fields themselves can be a path directly to a file or to a directory. Where a directory will then copy the entire contents of that directory to the specified path.
+    - Additionally the array could be a mix of objects and strings.
+
+  Some common use cases here, and ones recommended to configure right out of the box could be:
+    - Moving images to an images folder `{ from: "./assets/img", to: "./dist/images" }`
+    - Moving files from a `node_module` `{ from: "./node_modules/dep/img.png", to: "./dist/images/img.png" }`
+    
+      But please note this should not be used for files that need to be processed. As once moved they will not receive any processing on them. If you need to include additional Markdown that should be done using the include feature of the markdown document, or if you need to include some CSS that should be done using the SCSS include feature.
 
 ## Markdown Frontmatter
 
