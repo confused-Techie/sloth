@@ -74,6 +74,7 @@ Within it there are a few values used to direct the whole the process:
 * `cssSourceDirectory`: <string> The path to your SCSS files. Defaults to `./assets/css`.
 * `cssMinifyGenerateSourceMap`: <boolean> Whether or not to generate a source map for minified files.
 * `cssMinifyOptions`: <object> The options that will be passed directly to `CleanCSS`.
+* `md`: <object> You can optionally specify a `md` object in the config, which will be used to override the `Markdown-IT` instance used to process markdown documents. Keep in mind setting this will remove all native markdown features.
 * `staticBuildDirectory`: <string> The path to place static files.
 * `staticSourceDirectory`: <*> This field is used to direct how any static files move from one directory to another.
 
@@ -87,7 +88,7 @@ Within it there are a few values used to direct the whole the process:
   Some common use cases here, and ones recommended to configure right out of the box could be:
     - Moving images to an images folder `{ from: "./assets/img", to: "./dist/images" }`
     - Moving files from a `node_module` `{ from: "./node_modules/dep/img.png", to: "./dist/images/img.png" }`
-    
+
       But please note this should not be used for files that need to be processed. As once moved they will not receive any processing on them. If you need to include additional Markdown that should be done using the include feature of the markdown document, or if you need to include some CSS that should be done using the SCSS include feature.
 
 ## Markdown Frontmatter
