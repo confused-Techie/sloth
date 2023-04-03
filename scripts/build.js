@@ -9,16 +9,13 @@ const path = require("path");
 const ejs = require("ejs");
 const fm = require("front-matter");
 const { minify } = require("terser");
-const PostCSS = require("postcss");
-const tailwindcss = require("tailwindcss");
+const sass = require("sass");
 const CleanCSS = require("clean-css");
 const MarkdownIt = require("markdown-it");
 const markdownItContainer = require("markdown-it-container");
 const config = require("../site.config.js").config;
 
 const DEV_MODE = process.env.NODE_ENV === "development" ? true : false;
-
-const postcss = require("../site.config.js").postcss ?? PostCSS([tailwindcss]);
 
 const md = require("../site.config.js").md ?? new MarkdownIt({
   html: true
@@ -155,7 +152,7 @@ async function main() {
     }
   });
 
-  // 4) Generate CSS from tailwind
+  // 4) Generate CSS from SCSS
   config.cssBuildDirectory ??= config.buildDirectory;
   config.cssSourceDirectory ??= "./assets/css";
   config.cssMinifyOptions ??= {};
@@ -165,16 +162,14 @@ async function main() {
   await enumerateFiles(config.cssSourceDirectory, [], config.cssBuildDirectory, async (file, pathArray, filename) => {
     let content = fs.readFileSync(file, "utf8");
 
-    if (content.length < 1) {
+    if (content.length < 1 || filename.startsWith("_")) {
+      // dont handle filenames starting with '_' since they are sass includes
       return;
     }
 
-    let to = path.join(config.cssBuildDirectory, ...pathArray, filename);
-    let from = file;
+    let output = sass.compile(file);
 
-    let output = await postcss.process(content, { from: from, to: to });
-
-    fs.writeFileSync(to, output.css, {
+    fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".css")), output.css, {
       encoding: "utf8",
       flag: "w"
     });
@@ -191,7 +186,7 @@ async function main() {
 
       let miniOutput = new CleanCSS(tmpMinifyOptions).minify(output.css);
 
-      fs.writeFileSync(to.replace(".css", ".min.css"), miniOutput.styles, {
+      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".min.css")), miniOutput.styles, {
         encoding: "utf8",
         flag: "w"
       });
@@ -201,7 +196,7 @@ async function main() {
       miniOutput.sourceMap._file = filename;
       miniOutput.sourceMap._sourceRoot = "/";
 
-      fs.writeFileSync(to.replace(".css", ".css.map"), miniOutput.sourceMap.toString(), {
+      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".css.map")), miniOutput.sourceMap.toString(), {
         encoding: "utf8",
         flag: "w"
       });
@@ -209,7 +204,7 @@ async function main() {
 
       let miniOutput = new CleanCSS(config.cssMinifyOptions).minify(output.css);
 
-      fs.writeFileSync(to.replace(".css", ".min.css"), miniOutput.styles, {
+      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".min.css")), miniOutput.styles, {
         encoding: "utf8",
         flag: "w"
       });
