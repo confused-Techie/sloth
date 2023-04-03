@@ -52,6 +52,17 @@ And any changes from Markdown, CSS, JavaScript, and EJS will only need a simple 
 * [EJS](https://ejs.co/#promo) is used for templating HTML documents.
 * [Terser](https://github.com/terser/terser) is used to minify JavaScript. With [any and all options](https://github.com/terser/terser#minify-options) supported in the config.
 * [CleanCSS](https://github.com/clean-css/clean-css) is used to minify CSS. With [any and all options](https://github.com/clean-css/clean-css#constructor-options) supported in the config.
+* [PostCSS](https://github.com/postcss/postcss) is used to process your CSS file and hand it off to tailwindcss. While also allowing additional plugins to be used.
+
+## Lifecycle
+
+The build process follows a strict lifecycle, that you can use to your advantage.
+
+0) The Build Folder is completely emptied.
+1) HTML content is generated using Markdown, and EJS Templates.
+2) Static Files are copied over according to your `staticSourceDirectory` config.
+3) JavaScript is minified and placed in the build directory.
+4) CSS is processed by `PostCSS` which utilizes `tailwindcss` as a plugin to apply all transformations while it's written to your build directory. Once complete, `CleanCSS` is used to minify the source file and write those to your build directory as well.
 
 ## Structure
 

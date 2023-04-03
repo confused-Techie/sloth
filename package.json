@@ -6,15 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./scripts/dev.js",
-    "build": "npm run content:build && npm run tailwind:build && npm run mini:css && npm run mini:js && npm run content:copy",
-    "start:dev": "cross-env NODE_ENV=development concurrently -n tailwind,node,content,minijs,minicss,copy -c blue,cyan,yellow,red,magenta,gray 'npm:tailwind:watch' 'npm:start' 'npm:content:watch' 'npm:mini:js' 'npm:mini:css' 'npm:content:copy'",
-    "tailwind:build": "tailwindcss -i ./assets/css/site.css -o ./dist/site.css",
-    "tailwind:watch": "tailwindcss -i ./assets/css/site.css -o ./dist/site.css --watch",
+    "build": "npm run content:build",
+    "start:dev": "cross-env NODE_ENV=development concurrently -n node,content -c blue,yellow 'npm:start' 'npm:content:watch'",
     "content:build": "node ./scripts/build.js",
-    "content:watch": "nodemon ./scripts/build.js",
-    "content:copy": "node ./scripts/copy.js",
-    "mini:js": "node ./scripts/minify-js.js",
-    "mini:css": "minify ./dist/site.css > ./dist/site.min.css"
+    "content:watch": "nodemon ./scripts/build.js"
   },
   "keywords": [
     "static-site-builder"
@@ -22,7 +17,10 @@
   "author": "confused-Techie",
   "license": "MIT",
   "nodemonConfig": {
-    "ext": "js,json,md,ejs"
+    "ext": "js,json,md,ejs",
+    "ignore": [
+      "./dist"
+    ]
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.9",
@@ -45,6 +43,7 @@
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "minify": "^9.2.0",
+    "postcss": "^8.4.21",
     "tailwindcss": "^3.3.1",
     "terser": "^5.16.8"
   },

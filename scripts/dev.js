@@ -1,10 +1,10 @@
 const express = require("express");
 const fs = require("fs");
-const getConfig = require("./get-config.js");
+const config = require("../site.config.js").config;
 
 const app = express();
 
-const port = getConfig().devPort ?? 8080;
+const port = config.devPort ?? 8080;
 
 app.use("/", express.static("dist"));
 

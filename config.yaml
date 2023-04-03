@@ -1,8 +1,0 @@
-sourceDirectory: "./docs"
-buildDirectory: "./dist"
-devPort: 8080
-jsBuildDirectory: "./dist"
-jsSourceDirectory: "./assets/js"
-jsMinifyGenerateSourceMap: true
-jsMinifyOptions:
-cssBuildDirectory: "./dist"
