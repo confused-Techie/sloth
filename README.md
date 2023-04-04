@@ -123,7 +123,9 @@ Your EJS templates are largely the same as you'd find in any other setup. The mo
 
 Markdown-it plugin which adds the ability to include markdown fragment files.
 
-The default configuration will require specifying a fully path to the fragment, from the root of the repo.
+The default configuration will require specifying a full path to the fragment, from the root of the repo.
+
+A note, you should not use quotes in this path. It will likely fail to import if your path contains quotes.
 
 ```markdown
 !!!include(docs/micro.md)!!!
@@ -138,7 +140,7 @@ Which allows you to specify an EJS template to include into the page.
 Again requires specifying the full path from the root of the repo.
 
 A note, the EJS script that's imported should not use any variables as they will
-not retain the context, and will be parsed as standard HTML.
+not retain the context, and will be parsed as standard HTML. This may mean it is best suited for importing banners, or other warnings that may appear multiple times throughout a document.
 
 ```markdown
 !!!includeEJS(views/partials/simple.ejs)!!!
