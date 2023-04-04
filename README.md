@@ -101,6 +101,7 @@ When writing your Frontmatter some important notes:
 * No key of your frontmatter can be named `content` this is the key the body of your markdown is assigned when handed to the EJS templating engine.
 * The data in your frontmatter is available to the EJS templating engine, so that placing a frontmatter field of `title: Hello World` is then available within an EJS view as `<%=title%>`.
 * Any valid YAML may exist within your frontmatter, providing as many features as you'd like to your EJS template.
+* It's recommended to not begin any front matter values with '_' as that prefix is used by the Universally Available Frontmatter elements.
 
 ## EJS Templates
 
@@ -109,6 +110,9 @@ Your EJS templates are largely the same as you'd find in any other setup. The mo
 * You can check if `DEV_MODE` is true or false to change your `dist` output from when running locally or when building the application for production.
 * Any variables you need to build a specific instance of a page is defined via the frontmatter of your Markdown document.
 * To access the main Markdown Body as HTML within an EJS template simply use `<%- content %>` to apply it to the page.
+* To allow your EJS templates to access extra variables that can't be defined in a normal YAML frontmatter, there is a set of Universally Available Frontmatter elements, that are injected to mimic the frontmatter variables that EJS templates can access. They are always prefixed with '_' and are the following:
+  - `_timeToRead`: This is a value in minutes, of the estimated time to read the current page.
+  - `_date`: This is the date the file was created.
 
 # Supported Markdown Extensions
 

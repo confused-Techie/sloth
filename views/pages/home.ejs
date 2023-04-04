@@ -1,5 +1,11 @@
 <%- include("../partials/header", { title }); %>
 
+<h1><%=title%></h1>
+
+<%- include("../partials/readerMetadata.ejs"); %>
+
 <%- content %>
+
+<%- include("../partials/contributorMetadata.ejs"); %>
 
 <%- include("../partials/footer"); %>

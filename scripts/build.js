@@ -271,12 +271,34 @@ async function generateHTML(file) {
 
   const html = md.render(frontMatter.body);
 
+  // Here we will generate some helpful universally available frontmatter components.
+  const universalFrontMatter = {
+    _date: new Date().toDateString(),
+    _timeToRead: getTimeToRead(frontMatter.body)
+  };
+
+  // Some common attribute safety checks
+  // Without these values assigned, EJS will crash not being able to determine what they are if used in a template
+  frontMatter.attributes.title ??= "";
+  frontMatter.attributes.author ??= "";
+
   const page = await ejs.renderFile(
     path.join("views", "pages", `${frontMatter.attributes.view}.ejs`),
-    { ...frontMatter.attributes, content: html, DEV_MODE: DEV_MODE }
+    { ...frontMatter.attributes, ...universalFrontMatter, content: html, DEV_MODE: DEV_MODE }
   );
 
   return page;
+}
+
+function getTimeToRead(content) {
+  // This is a rather simplistic view at attempting to determine the average time
+  // it will take someone to read a page.
+
+  // First we will determine a word count.
+  let wordCount = content.trim().split(/\s+/).length;
+  let minutes = wordCount / 200; // The average adult reads 238 wpm, so lets go on the low end
+
+  return Math.round(minutes);
 }
 
 main();
