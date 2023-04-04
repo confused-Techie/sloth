@@ -6,7 +6,7 @@ author: confused-Techie
 
 ## Welcome to Pulsar
 
-As a quick test: Here is a link to view our [Admin Actions](/admin-actions-log/)
+As a quick test: Here is a link to view our [Admin Actions](./admin-actions-log/)
 
 Here you will find everything you need to know about Pulsar, from how to install it all the way to hacking away at its core to make it your own.
 
