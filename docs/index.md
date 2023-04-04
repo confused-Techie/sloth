@@ -6,11 +6,13 @@ author: confused-Techie
 
 ## Welcome to Pulsar
 
+As a quick test: Here is a link to view our [Admin Actions](/admin-actions-log/)
+
 Here you will find everything you need to know about Pulsar, from how to install it all the way to hacking away at its core to make it your own.
 
 The documentation has been broken down into various sections which you can find below.
 
-### Launch Manual
+### [Launch Manual](/launch-manual)
 
 The Launch Manual contains everything you need to know about Pulsar. It covers topics all the way from the initial installation through to developing and publishing your own packages.
 

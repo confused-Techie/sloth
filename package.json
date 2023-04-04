@@ -23,6 +23,7 @@
     ]
   },
   "dependencies": {
+    "atom-backend": "github:pulsar-edit/package-backend",
     "clean-css": "^5.3.2",
     "cross-env": "^7.0.3",
     "ejs": "^3.1.9",
