@@ -39,6 +39,7 @@ const md = require("../site.config.js").md ?? new MarkdownIt({
 ).use(require("markdown-it-emoji"), { // emoji support
 
 }).use(require("markdown-it-fontawesome") // font awesome support
+).use(require("markdown-it-codetabs") // Codetabs support
 ).use(require("./markdown-it-del.js") // del support
 ).use(require("./markdown-it-include-ejs.js"), { // allows including EJS docs
   root: "./"

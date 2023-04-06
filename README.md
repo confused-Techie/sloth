@@ -274,3 +274,22 @@ Custom plugin, that lives `./scripts/markdown-it-del.js`.
 Mirrored from `markdown-it-ins` supports the `<del>` element.
 
 `--deleted--` => `<del>deleted</del>`
+
+## `markdown-it-codetabs`
+
+* [NPM](https://www.npmjs.com/package/markdown-it-codetabs)
+* [GitHub](https://github.com/cncws/markdown-it-codetabs)
+
+Code tabs plugin.
+
+```markdown
+
+```js [g1:JavaScript]
+console.log("hello");
+```
+
+```py [g1:Python3]
+print("hello")
+```
+
+```
