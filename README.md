@@ -293,3 +293,24 @@ print("hello")
 ```
 
 ```
+
+## `markdown-it-footnote`
+
+* [NPM](https://www.npmjs.com/package/markdown-it-footnote)
+* [GitHub](https://github.com/markdown-it/markdown-it-footnote)
+
+Footnotes plugin for `markdown-it`.
+
+```markdown
+
+Here is an inline note.^[Inline notes are easier to write, since you don't have
+to pick an identifier.]
+
+Here is a footnote reference,[^1] and another.[^longnote]
+
+[^1]: Here is the footnote.
+[^longnote]: Here's one with multiple blocks.
+  Subsequent paragraphs are indented to show that they belong to the previous
+  footnote.
+
+```

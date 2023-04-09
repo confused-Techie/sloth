@@ -36,6 +36,7 @@
     "markdown-it-emoji": "^2.0.2",
     "markdown-it-expandable": "^1.0.2",
     "markdown-it-fontawesome": "^0.3.0",
+    "markdown-it-footnote": "^3.0.3",
     "markdown-it-highlightjs": "^4.0.1",
     "markdown-it-include": "^2.0.0",
     "markdown-it-ins": "^3.0.1",
