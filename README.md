@@ -90,7 +90,9 @@ Within it there are a few values used to direct the whole the process:
     - Moving files from a `node_module` `{ from: "./node_modules/dep/img.png", to: "./dist/images/img.png" }`
 
       But please note this should not be used for files that need to be processed. As once moved they will not receive any processing on them. If you need to include additional Markdown that should be done using the include feature of the markdown document, or if you need to include some CSS that should be done using the SCSS include feature.
-
+* `sidebar`: This defines any global sidebar you'd like to have accessible in the EJS templates. This could either be an object directly listed in the config, or could be the relative path to a file. If it is a reference to a file the following file formats are currently supported:
+  - `json`
+  
 ## Markdown Frontmatter
 
 Your frontmatter of your Markdown documents is important, and directs some aspects of the build process.
@@ -113,6 +115,7 @@ Your EJS templates are largely the same as you'd find in any other setup. The mo
 * To allow your EJS templates to access extra variables that can't be defined in a normal YAML frontmatter, there is a set of Universally Available Frontmatter elements, that are injected to mimic the frontmatter variables that EJS templates can access. They are always prefixed with '_' and are the following:
   - `_timeToRead`: This is a value in minutes, of the estimated time to read the current page.
   - `_date`: This is the date the file was created.
+  - `_sidebar`: This is the contents of any `sidebar` value added to the config.
 
 # Supported Markdown Extensions
 

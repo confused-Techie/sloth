@@ -1,0 +1,82 @@
+{
+  "Getting Started": {
+    "index": "/getting-started/index.html",
+    "content": [
+      {
+        "name": "Why Pulsar",
+        "index": "/getting-started/why-pulsar/index.html",
+        "content": [
+          {
+            "name": "The Nucleus of Pulsar",
+            "index": "/getting-started/why-pulsar/the-nucleus-of-pulsar.html"
+          },
+          {
+            "name": "The Native Web",
+            "index": "/getting-started/why-pulsar/the-native-web.html"
+          },
+          {
+            "name": "JavaScript, Meet C++",
+            "index": "/getting-started/why-pulsar/javascript-meet-c.html"
+          },
+          {
+            "name": "Web Tech: The Fun Parts",
+            "index": "/getting-started/why-pulsar/web-tech-the-fun-parts.html"
+          },
+          {
+            "name": "An Open-Source Text Editor",
+            "index": "/getting-started/why-pulsar/open-source-text-editor.html"
+          }
+        ]
+      },
+      {
+        "name": "Installing Pulsar",
+        "index": "/getting-started/installing-pulsar/index.html",
+        "content": [
+          {
+            "name": "Installation",
+            "index": "/getting-started/installing-pulsar/os-installation.html"
+          },
+          {
+            "name": "Package Managers",
+            "index": "/getting-started/installing-pulsar/package-managers.html"
+          },
+          {
+            "name": "Updating Pulsar",
+            "index": "/getting-started/installing-pulsar/updating.html"
+          },
+          {
+            "name": "Portable Mode",
+            "index": "/getting-started/installing-pulsar/portable.html"
+          }
+        ]
+      }
+    ]
+  },
+  "Using Pulsar": {
+
+  },
+  "Pulsar Core Packages & Features": {
+
+  },
+  "Customize Pulsar": {
+
+  },
+  "Hacking Pulsar": {
+
+  },
+  "Developing for Pulsar": {
+
+  },
+  "Package Example Guides": {
+
+  },
+  "Behind Pulsar": {
+
+  },
+  "Debugging Pulsar": {
+
+  },
+  "FAQ": {
+
+  }
+}

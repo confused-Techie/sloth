@@ -18,6 +18,7 @@ module.exports = {
       //  to: "./dist/robots.txt"
       //}
     //],
-    staticBuildDirectory: "./dist"
+    staticBuildDirectory: "./dist",
+    sidebar: "./sidebar.json"
   }
 };

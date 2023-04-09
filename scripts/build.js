@@ -50,6 +50,8 @@ const md = require("../site.config.js").md ?? new MarkdownIt({
   "info"
 );
 
+let sidebar;
+
 async function main() {
 
   // Empty build folder
@@ -57,6 +59,21 @@ async function main() {
 
   // Check if our build folder exists, or create it
   await createIfDirAbsent(config.buildDirectory);
+
+  // 0) Find our sidebar files, and keep them for injection
+
+  if (typeof config.sidebar === "string") {
+    switch(config.sidebar.split(".")[config.sidebar.split(".").length-1]) {
+      case "json":
+        let tmpContent = fs.readFileSync(config.sidebar);
+        sidebar = JSON.parse(tmpContent);
+        break;
+    }
+  }
+
+  if (typeof config.sidebar === "object") {
+    sidebar = config.sidebar;
+  }
 
   // 1) Generate All HTML content
 
@@ -286,7 +303,7 @@ async function generateHTML(file) {
 
   const page = await ejs.renderFile(
     path.join("views", "pages", `${frontMatter.attributes.view}.ejs`),
-    { ...frontMatter.attributes, ...universalFrontMatter, content: html, DEV_MODE: DEV_MODE }
+    { ...frontMatter.attributes, ...universalFrontMatter, _sidebar: sidebar, content: html, DEV_MODE: DEV_MODE }
   );
 
   return page;
