@@ -290,17 +290,17 @@ Mirrored from `markdown-it-ins` supports the `<del>` element.
 
 Code tabs plugin.
 
-```markdown
+~~~markdown
 
-~~~js [g1:JavaScript]
+```js [g1:JavaScript]
 console.log("hello");
-~~~
-
-~~~py [g1:Python3]
-print("hello")
-~~~
-
 ```
+
+```py [g1:Python3]
+print("hello")
+```
+
+~~~
 
 ## `markdown-it-footnote`
 
