@@ -308,7 +308,11 @@ async function generateHTML(file) {
   } else if (typeof config.defaultView === "string") {
     viewToUse = config.defaultView;
   } else {
-    viewToUse = "No View Specified";
+    throw new Error(`No EJS template found for ${frontMatter.attributes.title}!`);
+  }
+
+  if (!fs.existsSync(path.join("views", "pages", `${viewToUse}.ejs`))) {
+    throw new Error(`The EJS Template specified in ${frontMatter.attributes.title} of ${viewToUse} cannot be found!`);
   }
 
   const page = await ejs.renderFile(

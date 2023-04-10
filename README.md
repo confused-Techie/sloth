@@ -81,7 +81,7 @@ Within it there are a few values used to direct the whole the process:
   This could be any of the following:
     - A string of a path.
     - An array of strings of paths.
-    - An array of objects each with a `to` and `from` keys specifiying where a file should move `to` and where `from`.
+    - An array of objects each with a `to` and `from` keys specifying where a file should move `to` and where `from`.
       The `to` and `from` fields themselves can be a path directly to a file or to a directory. Where a directory will then copy the entire contents of that directory to the specified path.
     - Additionally the array could be a mix of objects and strings.
 
