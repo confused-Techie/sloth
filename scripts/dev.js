@@ -38,7 +38,12 @@ process.on("unhandledRejection", async (err, origin) => {
 });
 
 process.on("uncaughtException", async (err, origin) => {
-  if (err.code === "EADDRINUSE") {
+  if (
+    err.code === "EADDRINUSE" || // POSIX Error Constant
+    err.code === "WSAEADDRINUSE" || // Windows Specific Error Constant
+    err.code === "EADDRNOTAVAIL" || // POSIX Error Constant Address unavailable for use
+    err.code === "WSAEADDRNOTAVAIL" // Windows Specific Error Constant address unavailable
+  ) {
     console.log(`Port ${port} is in use, increasing port number by one...`);
     port = port + 1;
     startListener();
