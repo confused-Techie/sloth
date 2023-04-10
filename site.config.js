@@ -19,6 +19,7 @@ module.exports = {
       //}
     //],
     staticBuildDirectory: "./dist",
-    sidebar: "./sidebar.json"
+    sidebar: "./sidebar.json",
+    defaultView: "home"
   }
 };

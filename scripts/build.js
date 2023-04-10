@@ -301,8 +301,18 @@ async function generateHTML(file) {
   frontMatter.attributes.title ??= "";
   frontMatter.attributes.author ??= "";
 
+  let viewToUse;
+
+  if (typeof frontMatter.attributes.view === "string") {
+    viewToUse = frontMatter.attributes.view;
+  } else if (typeof config.defaultView === "string") {
+    viewToUse = config.defaultView;
+  } else {
+    viewToUse = "No View Specified";
+  }
+
   const page = await ejs.renderFile(
-    path.join("views", "pages", `${frontMatter.attributes.view}.ejs`),
+    path.join("views", "pages", `${viewToUse}.ejs`),
     { ...frontMatter.attributes, ...universalFrontMatter, _sidebar: sidebar, content: html, DEV_MODE: DEV_MODE }
   );
 

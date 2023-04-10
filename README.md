@@ -92,7 +92,8 @@ Within it there are a few values used to direct the whole the process:
       But please note this should not be used for files that need to be processed. As once moved they will not receive any processing on them. If you need to include additional Markdown that should be done using the include feature of the markdown document, or if you need to include some CSS that should be done using the SCSS include feature.
 * `sidebar`: This defines any global sidebar you'd like to have accessible in the EJS templates. This could either be an object directly listed in the config, or could be the relative path to a file. If it is a reference to a file the following file formats are currently supported:
   - `json`
-  
+* `defaultView`: Allows specifying the name of a default EJS view when the frontmatter of a doc doesn't specify one. Should only define the filename itself, without any extension. e.g. `./views/partials/home.ejs` => `"defaultView": "home"`
+
 ## Markdown Frontmatter
 
 Your frontmatter of your Markdown documents is important, and directs some aspects of the build process.
