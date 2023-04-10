@@ -6,24 +6,14 @@ const app = express();
 
 let serve;
 
-const port = config.devPort ?? 8080;
+let port = config.devPort ?? 8080;
 
 app.use("/", express.static("dist"));
 
 function startListener() {
-  try {
-    serve = app.listen(port, () => {
-      console.log(`Dev site running at: http://localhost:${port}/`);
-    });
-  } catch(err) {
-    if (err.code === "EADDRINUSE") {
-      port = port + 1;
-      startListener();
-    } else {
-      console.error(err);
-      process.exit(100);
-    }
-  }
+  serve = app.listen(port, () => {
+    console.log(`Dev site running at: http://localhost:${port}/`);
+  });
 }
 
 startListener();
@@ -40,4 +30,20 @@ process.on("SIGINT", async () => {
   serve.close(() => {
     console.log("HTTP Server closed.");
   });
+});
+
+process.on("unhandledRejection", async (err, origin) => {
+  console.error(err);
+  process.exit(100);
+});
+
+process.on("uncaughtException", async (err, origin) => {
+  if (err.code === "EADDRINUSE") {
+    console.log(`Port ${port} is in used, increasing port number by one...`);
+    port = port + 1;
+    startListener();
+  } else {
+    console.error(err);
+    process.exit(25);
+  }
 });
