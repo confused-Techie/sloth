@@ -39,7 +39,7 @@ process.on("unhandledRejection", async (err, origin) => {
 
 process.on("uncaughtException", async (err, origin) => {
   if (err.code === "EADDRINUSE") {
-    console.log(`Port ${port} is in used, increasing port number by one...`);
+    console.log(`Port ${port} is in use, increasing port number by one...`);
     port = port + 1;
     startListener();
   } else {
