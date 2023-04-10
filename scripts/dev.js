@@ -9,5 +9,5 @@ const port = config.devPort ?? 8080;
 app.use("/", express.static("dist"));
 
 app.listen(port, () => {
-  console.log(`Site is listening on port: ${port}`);
+  console.log(`Dev site running at: http://localhost:${port}/`);
 });
