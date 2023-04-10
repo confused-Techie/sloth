@@ -77,22 +77,41 @@ async function main() {
 
   // 1) Generate All HTML content
 
-  const htmlFileHandler = async (file, pathArray, filename) => {
-    let content = await generateHTML(file);
+  const pageMap = {};
 
-    if (typeof content === "boolean" && !content) {
+  const htmlFileHandler = async (file, pathArray, filename) => {
+    let path;
+
+    if (pathArray.length < 1) {
+      path = `/${filename}`;
+    } else {
+      path = pathArray.join("/");
+      path = `/${path}/${filename}`;
+    }
+    let page = await generatePageObject(file, pathArray, path, filename);
+
+    if (typeof page === "boolean" && !page) {
       return;
     }
 
-    // Write out HTML to the build dir
-    fs.writeFileSync(path.join(config.buildDirectory, ...pathArray, `${filename.replace(".md", ".html")}`), content, {
-      encoding: "utf8",
-      flag: "w"
-    });
-    return;
+    pageMap[path] = page;
   };
 
   await enumerateFiles(config.sourceDirectory, [], config.buildDirectory, htmlFileHandler);
+
+  // Now that all pages have been handled, and we have our full pageMap,
+  // we can go ahead and cycle through our page map and generate pages as needed,
+  // now with a global store of all other pages to be able to generate data from if needed.
+
+  for (const page in pageMap) {
+    let content = await generateHTML(pageMap[page], pageMap);
+
+    // Write out HTML to the build dir
+    fs.writeFileSync(path.join(config.buildDirectory, ...pageMap[page]._pathArray, `${pageMap[page]._filename.replace(".md", ".html")}`), content, {
+      encoding: "utf8",
+      flag: "w"
+    });
+  }
 
   // 2) Static File Copy. Take everything from the static folder
   config.staticSourceDirectory ??= ["./assets/static"];
@@ -277,7 +296,7 @@ async function createIfDirAbsent(file) {
   }
 }
 
-async function generateHTML(file) {
+async function generatePageObject(file, pathArray, path, filename) {
   const mdFile = fs.readFileSync(file, "utf8");
 
   const frontMatter = fm(mdFile);
@@ -288,8 +307,6 @@ async function generateHTML(file) {
     return false;
   }
 
-  const html = md.render(frontMatter.body);
-
   // Here we will generate some helpful universally available frontmatter components.
   const universalFrontMatter = {
     _date: new Date().toDateString(),
@@ -297,30 +314,51 @@ async function generateHTML(file) {
   };
 
   // Some common attribute safety checks
-  // Without these values assigned, EJS will crash not being able to determine what they are if used in a template
+  // Without these values assigned, EJS will crash not ebing able to determine what they are if used in a template.
   frontMatter.attributes.title ??= "";
   frontMatter.attributes.author ??= "";
 
+  // Now we will return an object containing all of our data.
+  return {
+    ...frontMatter.attributes,
+    ...universalFrontMatter,
+    _sidebar: sidebar,
+    _markdown: frontMatter.body,
+    DEV_MODE: DEV_MODE,
+    _pathArray: pathArray,
+    _file: file,
+    _filename: filename
+  };
+
+}
+
+async function generateHTML(page, pageMap) {
+  // pageMap is a full HashMap of every single page that will be written.
+  // If needed we could add additional functions here that rely on knowing the global
+  // page layout such as building sidebars, or sitemaps
+
+  const html = md.render(page._markdown);
+
   let viewToUse;
 
-  if (typeof frontMatter.attributes.view === "string") {
-    viewToUse = frontMatter.attributes.view;
+  if (typeof page.view === "string") {
+    viewToUse = page.view;
   } else if (typeof config.defaultView === "string") {
     viewToUse = config.defaultView;
   } else {
-    throw new Error(`No EJS template found for ${frontMatter.attributes.title}!`);
+    throw new Error(`No EJS template found for ${page._file}!`);
   }
 
   if (!fs.existsSync(path.join("views", "pages", `${viewToUse}.ejs`))) {
-    throw new Error(`The EJS Template specified in ${frontMatter.attributes.title} of ${viewToUse} cannot be found!`);
+    throw new Error(`The EJS Template specified in ${page._file} of ${viewToUse} cannot be found!`);
   }
 
-  const page = await ejs.renderFile(
+  const builtPage = await ejs.renderFile(
     path.join("views", "pages", `${viewToUse}.ejs`),
-    { ...frontMatter.attributes, ...universalFrontMatter, _sidebar: sidebar, content: html, DEV_MODE: DEV_MODE }
+    { ...page, content: html }
   );
 
-  return page;
+  return builtPage;
 }
 
 function getTimeToRead(content) {

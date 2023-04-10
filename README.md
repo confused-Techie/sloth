@@ -17,10 +17,12 @@ It's only focus is taking your raw data and turning it into a website. If you wa
 
 When you run `npm run build` it'll run the `./scripts/build.js` script, which then orchestrates the whole build process between all tools.
 
-Which follows a scrict lifecycle.
+Which follows a strict lifecycle.
 
 0) The Build Folder is completely emptied.
 1) HTML content is generated using Markdown, and EJS Templates.
+    To add more to this, every valid page is first looped through and processed, generating any additional variables and handling frontmatter. Once done then it is cycled through again to access every single page.
+    This is done so that if needed, there is a way for every single page to have easy access to it's neighbor pages if needed.
 2) Static Files are copied over according to your `staticSourceDirectory` config.
 3) JavaScript is minified and placed in the build directory.
 4) CSS is processed using `SCSS` and written to disk. Which is then minified using `CleanCSS`.
@@ -117,6 +119,7 @@ Your EJS templates are largely the same as you'd find in any other setup. The mo
   - `_timeToRead`: This is a value in minutes, of the estimated time to read the current page.
   - `_date`: This is the date the file was created.
   - `_sidebar`: This is the contents of any `sidebar` value added to the config.
+  - `_markdown`: This is the full contents of the raw markdown document used to build the page.
 
 # Supported Markdown Extensions
 
