@@ -349,12 +349,14 @@ async function generateHTML(page, pageMap) {
     throw new Error(`No EJS template found for ${page._file}!`);
   }
 
-  if (!fs.existsSync(path.join("views", "pages", `${viewToUse}.ejs`))) {
+  let viewPath = [config.viewPagePath] ?? ["views", "pages"];
+
+  if (!fs.existsSync(path.join(...viewPath, `${viewToUse}.ejs`))) {
     throw new Error(`The EJS Template specified in ${page._file} of ${viewToUse} cannot be found!`);
   }
 
   const builtPage = await ejs.renderFile(
-    path.join("views", "pages", `${viewToUse}.ejs`),
+    path.join(...viewPath, `${viewToUse}.ejs`),
     { ...page, content: html }
   );
 

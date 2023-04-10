@@ -20,6 +20,7 @@ module.exports = {
     //],
     staticBuildDirectory: "./dist",
     sidebar: "./sidebar.json",
-    defaultView: "home"
+    defaultView: "home",
+    viewPagePath: "./views/pages"
   }
 };
