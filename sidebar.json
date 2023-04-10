@@ -53,7 +53,71 @@
     ]
   },
   "Using Pulsar": {
-
+    "index": "/using-pulsar/index.html",
+    "content": [
+      {
+        "name": "Pulsar Basics",
+        "index": "/using-pulsar/pulsar-basics/index.html",
+        "content": [
+          {
+            "name": "Terminology",
+            "index": "/using-pulsar/pulsar-basics/terminology.html"
+          },
+          {
+            "name": "Command Palette",
+            "index": "/using-pulsar/pulsar-basics/command-palette.html"
+          },
+          {
+            "name": "Settings and Preferences & Proxy and Firewall Settings",
+            "index": "/using-pulsar/pulsar-basics/settings.html"
+          },
+          {
+            "name": "Open, Modifying, and Saving Files",
+            "index": "/using-pulsar/pulsar-basics/open-modifying-saving-files.html"
+          },
+          {
+            "name": "Opening Directories",
+            "index": "/using-pulsar/pulsar-basics/opening-directories.html"
+          }
+        ]
+      },
+      {
+        "name": "Moving in Pulsar",
+        "index": "/using-pulsar/moving-in-pulsar/index.html",
+        "content": [
+          {
+            "name": "Additional Movement and Selection Commands",
+            "index": "/using-pulsar/moving-in-pulsar/movement-and-selection-commands.html"
+          },
+          {
+            "name": "Navigating by Symbols",
+            "index": "/using-pulsar/moving-in-pulsar/navigating-by-symbols.html"
+          },
+          {
+            "name": "Bookmarks",
+            "index": "/using-pulsar/moving-in-pulsar/bookmarks.html"
+          }
+        ]
+      },
+      {
+        "name": "Pulsar Packages (Basics)",
+        "index": "/using-pulsar/pulsar-packages/index.html",
+        "content": [
+          {
+            "name": "Package Settings",
+            "index": "/using-pulsar/pulsar-packages/package-settings.html"
+          },
+          {
+            "name": "Pulsar Themes",
+            "index": "/using-pulsar/pulsar-packages/pulsar-themes.html"
+          },
+          {
+            "name": "Command Line",
+            "index": "/using-pulsar/pulsar-packages/command-line.html"
+          }
+        ]
+      }
+    ]
   },
   "Pulsar Core Packages & Features": {
 
