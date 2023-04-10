@@ -292,13 +292,13 @@ Code tabs plugin.
 
 ```markdown
 
-```js [g1:JavaScript]
+~~~js [g1:JavaScript]
 console.log("hello");
-```
+~~~
 
-```py [g1:Python3]
+~~~py [g1:Python3]
 print("hello")
-```
+~~~
 
 ```
 
