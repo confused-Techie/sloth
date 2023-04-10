@@ -290,7 +290,7 @@ Mirrored from `markdown-it-ins` supports the `<del>` element.
 
 Code tabs plugin.
 
-```markdown
+````markdown
 
 ```js [g1:JavaScript]
 console.log("hello");
@@ -300,7 +300,7 @@ console.log("hello");
 print("hello")
 ```
 
-```
+````
 
 ## `markdown-it-footnote`
 
