@@ -1,4 +1,7 @@
 {
+  "_settings": {
+    "_default": "Getting Started"
+  },
   "Getting Started": {
     "index": "/getting-started/index.html",
     "content": [
@@ -114,6 +117,20 @@
           {
             "name": "Command Line",
             "index": "/using-pulsar/pulsar-packages/command-line.html"
+          }
+        ]
+      },
+      {
+        "name": "Pulsar Selectors",
+        "index": "/using-pulsar/pulsar-selectors/index.html"
+      },
+      {
+        "name": "Editing and Deleting Text",
+        "index": "/using-pulsar/editing-and-deleting-text/index.html",
+        "content": [
+          {
+            "name": "Basic Manipulation",
+            "index": "/using-pulsar/editing-and-deleting-text/basic-manipulation.html"
           }
         ]
       }
