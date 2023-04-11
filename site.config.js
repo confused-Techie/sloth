@@ -4,14 +4,14 @@ module.exports = {
     buildDirectory: "./test/dist",
     devPort: 8080,
     jsBuildDirectory: "./dist",
-    jsSourceDirectory: "./assets/js",
+    //jsSourceDirectory: "./assets/js",
     jsMinifyGenerateSourceMap: true,
     jsMinifyOptions: {},
     cssBuildDirectory: "./dist",
-    cssSourceDirectory: "./assets/css",
+    //cssSourceDirectory: "./assets/css",
     cssMinifyGenerateSourceMap: true,
     cssMinifyOptions: {},
-    staticSourceDirectory: "./assets/static",//[
+    //staticSourceDirectory: "./assets/static",//[
       //"./assets/static"
       //{
       //  from: "./assets/static/robots.txt",
@@ -22,5 +22,8 @@ module.exports = {
     //sidebar: "./sidebar.json",
     defaultView: "home",
     viewPagePath: "./test/views/"
+  },
+  options: {
+    verbose: true
   }
 };

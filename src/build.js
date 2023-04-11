@@ -13,13 +13,21 @@ const sass = require("sass");
 const CleanCSS = require("clean-css");
 const frontMatterPlugins = require("./front-matter-plugins.js");
 
-//let userConfig = JSON.parse(fs.readFileSync("./site.config.js"));
-let userConfig = require("../site.config.js");
+const userConfig = require(path.join(process.cwd(), "./site.config.js"));
 const config = userConfig.config;
+
+userConfig.options ??= {};
+
+const md = userConfig.md ?? require("./markdown-export.js");
 
 const DEV_MODE = process.env.NODE_ENV === "development" ? true : false;
 
-const md = userConfig.md ?? require("./markdown-export.js");
+const DEFAULT_PATHS = {
+  static: "./assets/static",
+  js: "./assets/js",
+  css: "./assets/css",
+  ejs: ["views", "pages"]
+};
 
 let sidebar;
 
@@ -36,8 +44,7 @@ async function main() {
   if (typeof config.sidebar === "string") {
     switch(config.sidebar.split(".")[config.sidebar.split(".").length-1]) {
       case "json":
-        let tmpContent = fs.readFileSync(config.sidebar);
-        sidebar = JSON.parse(tmpContent);
+        sidebar = JSON.parse(fs.readFileSync(config.sidebar));
         break;
     }
   }
@@ -85,141 +92,165 @@ async function main() {
   }
 
   // 2) Static File Copy. Take everything from the static folder
-  config.staticSourceDirectory ??= ["./assets/static"];
-  config.staticBuildDirectory ??= config.buildDirectory;
+  if (config.staticSourceDirectory || fs.existsSync(DEFAULT_PATHS.static)) {
 
-  await createIfDirAbsent(config.staticBuildDirectory);
+    config.staticSourceDirectory ??= [ DEFAULT_PATHS.static ];
+    config.staticBuildDirectory ??= config.buildDirectory;
 
-  if (!Array.isArray(config.staticSourceDirectory)) {
-    config.staticSourceDirectory = [ config.staticSourceDirectory ];
-  }
+    await createIfDirAbsent(config.staticBuildDirectory);
 
-  for (const staticDir of config.staticSourceDirectory) {
+    if (!Array.isArray(config.staticSourceDirectory)) {
+      config.staticSourceDirectory = [ config.staticSourceDirectory ];
+    }
 
-    if (typeof staticDir === "string") {
+    for (const staticDir of config.staticSourceDirectory) {
 
-      await enumerateFiles(staticDir, [], config.staticBuildDirectory, (file, pathArray, filename) => {
-        fs.copyFileSync(file, path.join(config.staticBuildDirectory, ...pathArray, filename));
-      });
+      if (typeof staticDir === "string") {
 
-    } else if (typeof staticDir === "object") {
-      await enumerateFiles(staticDir.from, [], staticDir.to, (file, pathArray, filename, immediateReturn) => {
-        // Now when using this method to move files, the `to` location can either be
-        // a directory, or a specific file. So we gotta check
-        if (immediateReturn) {
-          fs.copyFileSync(path.resolve(file), path.resolve(staticDir.to));
-        } else {
-          fs.copyFileSync(file, path.join(staticDir.to, ...pathArray, filename));
-        }
-      });
+        await enumerateFiles(staticDir, [], config.staticBuildDirectory, (file, pathArray, filename) => {
+          fs.copyFileSync(file, path.join(config.staticBuildDirectory, ...pathArray, filename));
+        });
+
+      } else if (typeof staticDir === "object") {
+        await enumerateFiles(staticDir.from, [], staticDir.to, (file, pathArray, filename, immediateReturn) => {
+          // Now when using this method to move files, the `to` location can either be
+          // a directory, or a specific file. So we gotta check
+          if (immediateReturn) {
+            fs.copyFileSync(path.resolve(file), path.resolve(staticDir.to));
+          } else {
+            fs.copyFileSync(file, path.join(staticDir.to, ...pathArray, filename));
+          }
+        });
+      }
+    }
+
+  } else {
+    if (userConfig.options.verbose) {
+      console.log("No valid Static File source directory found, skipping...");
     }
   }
 
   // 3) Minify JavaScript
-  config.jsBuildDirectory ??= config.buildDirectory;
-  config.jsSourceDirectory ??= "./assets/js";
-  config.jsMinifyOptions ??= {};
+  if (config.jsSourceDirectory || fs.existsSync(DEFAULT_PATHS.js)) {
 
-  await createIfDirAbsent(config.jsBuildDirectory);
+    config.jsBuildDirectory ??= config.buildDirectory;
+    config.jsSourceDirectory ??= DEFAULT_PATHS.js;
+    config.jsMinifyOptions ??= {};
 
-  await enumerateFiles(config.jsSourceDirectory, [], config.jsBuildDirectory, async (file, pathArray, filename) => {
+    await createIfDirAbsent(config.jsBuildDirectory);
 
-    let content = fs.readFileSync(file, "utf8");
+    await enumerateFiles(config.jsSourceDirectory, [], config.jsBuildDirectory, async (file, pathArray, filename) => {
 
-    if (content.length < 1) {
-      return;
-    }
+      let content = fs.readFileSync(file, "utf8");
 
-    if (config.jsMinifyGenerateSourceMap) {
-      let tmpMinifyOptions = config.jsMinifyOptions;
-
-      if (typeof tmpMinifyOptions.sourceMap !== "object") {
-        tmpMinifyOptions.sourceMap = {
-          filename: filename,
-          url: `${filename.replace(".js", ".js.map")}`
-        };
+      if (content.length < 1) {
+        return;
       }
 
-      let output = await minify(content, config.jsMinifyOptions);
+      if (config.jsMinifyGenerateSourceMap) {
+        let tmpMinifyOptions = config.jsMinifyOptions;
 
-      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".min.js")}`), output.code, {
-        encoding: "utf8",
-        flag: "w"
-      });
+        if (typeof tmpMinifyOptions.sourceMap !== "object") {
+          tmpMinifyOptions.sourceMap = {
+            filename: filename,
+            url: `${filename.replace(".js", ".js.map")}`
+          };
+        }
 
-      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".js.map")}`), output.map, {
-        encoding: "utf8",
-        flag: "w"
-      });
-    } else {
-      let output = await minify(contnet, config.jsMinifyOptions);
+        let output = await minify(content, config.jsMinifyOptions);
 
-      fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".min.js")}`), output.code, {
-        encoding: "utf8",
-        flag: "w"
-      });
-    }
-  });
+        fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".min.js")}`), output.code, {
+          encoding: "utf8",
+          flag: "w"
+        });
 
-  // 4) Generate CSS from SCSS
-  config.cssBuildDirectory ??= config.buildDirectory;
-  config.cssSourceDirectory ??= "./assets/css";
-  config.cssMinifyOptions ??= {};
+        fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".js.map")}`), output.map, {
+          encoding: "utf8",
+          flag: "w"
+        });
+      } else {
+        let output = await minify(contnet, config.jsMinifyOptions);
 
-  await createIfDirAbsent(config.cssBuildDirectory);
-
-  await enumerateFiles(config.cssSourceDirectory, [], config.cssBuildDirectory, async (file, pathArray, filename) => {
-    let content = fs.readFileSync(file, "utf8");
-
-    if (content.length < 1 || filename.startsWith("_")) {
-      // dont handle filenames starting with '_' since they are sass includes
-      return;
-    }
-
-    let output = sass.compile(file);
-
-    fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".css")), output.css, {
-      encoding: "utf8",
-      flag: "w"
+        fs.writeFileSync(path.join(config.jsBuildDirectory, ...pathArray, `${filename.replace(".js", ".min.js")}`), output.code, {
+          encoding: "utf8",
+          flag: "w"
+        });
+      }
     });
 
+  } else {
+    if (userConfig.options.verbose) {
+      console.log("No valid JavaScript source directory found, skipping...");
+    }
+  }
 
-    // Now since we already have our source CSS available, we can much more easily
-    // generate a source map of it, and minify it
-    if (config.cssMinifyGenerateSourceMap) {
-      let tmpMinifyOptions = config.cssMinifyOptions;
+  // 4) Generate CSS from SCSS
+  if (config.cssSourceDirectory || fs.existsSync(DEFAULT_PATHS.css)) {
 
-      if (typeof tmpMinifyOptions.sourceMap !== "boolean") {
-        tmpMinifyOptions.sourceMap = true;
+    config.cssBuildDirectory ??= config.buildDirectory;
+    config.cssSourceDirectory ??= DEFAULT_PATHS.css;
+    config.cssMinifyOptions ??= {};
+
+    await createIfDirAbsent(config.cssBuildDirectory);
+
+    await enumerateFiles(config.cssSourceDirectory, [], config.cssBuildDirectory, async (file, pathArray, filename) => {
+      let content = fs.readFileSync(file, "utf8");
+
+      if (content.length < 1 || filename.startsWith("_")) {
+        // dont handle filenames starting with '_' since they are sass includes
+        return;
       }
 
-      let miniOutput = new CleanCSS(tmpMinifyOptions).minify(output.css);
+      let output = sass.compile(file);
 
-      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".min.css")), miniOutput.styles, {
+      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".css")), output.css, {
         encoding: "utf8",
         flag: "w"
       });
 
-      // Now to finish generating our sourcemap file
-      // https://github.com/mozilla/source-map/#sourcemapgenerator
-      miniOutput.sourceMap._file = filename;
-      miniOutput.sourceMap._sourceRoot = "/";
 
-      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".css.map")), miniOutput.sourceMap.toString(), {
-        encoding: "utf8",
-        flag: "w"
-      });
-    } else {
+      // Now since we already have our source CSS available, we can much more easily
+      // generate a source map of it, and minify it
+      if (config.cssMinifyGenerateSourceMap) {
+        let tmpMinifyOptions = config.cssMinifyOptions;
 
-      let miniOutput = new CleanCSS(config.cssMinifyOptions).minify(output.css);
+        if (typeof tmpMinifyOptions.sourceMap !== "boolean") {
+          tmpMinifyOptions.sourceMap = true;
+        }
 
-      fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".min.css")), miniOutput.styles, {
-        encoding: "utf8",
-        flag: "w"
-      });
+        let miniOutput = new CleanCSS(tmpMinifyOptions).minify(output.css);
+
+        fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".min.css")), miniOutput.styles, {
+          encoding: "utf8",
+          flag: "w"
+        });
+
+        // Now to finish generating our sourcemap file
+        // https://github.com/mozilla/source-map/#sourcemapgenerator
+        miniOutput.sourceMap._file = filename;
+        miniOutput.sourceMap._sourceRoot = "/";
+
+        fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".css.map")), miniOutput.sourceMap.toString(), {
+          encoding: "utf8",
+          flag: "w"
+        });
+      } else {
+
+        let miniOutput = new CleanCSS(config.cssMinifyOptions).minify(output.css);
+
+        fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".min.css")), miniOutput.styles, {
+          encoding: "utf8",
+          flag: "w"
+        });
+      }
+
+    });
+
+  } else {
+    if (userConfig.options.verbose) {
+      console.log("No valid CSS source directory found, skipping...");
     }
-
-  });
+  }
 
   return;
 }
@@ -320,7 +351,7 @@ async function generateHTML(page, pageMap) {
     throw new Error(`No EJS template found for ${page._file}!`);
   }
 
-  let viewPath = [config.viewPagePath] ?? ["views", "pages"];
+  let viewPath = [config.viewPagePath] ?? DEFAULT_PATHS.ejs;
 
   if (!fs.existsSync(path.join(...viewPath, `${viewToUse}.ejs`))) {
     throw new Error(`The EJS Template specified in ${page._file} of ${viewToUse} cannot be found!`);

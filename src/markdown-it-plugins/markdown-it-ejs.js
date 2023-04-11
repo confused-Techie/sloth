@@ -1,37 +1,37 @@
 module.exports = (md, options) => {
-  const proxy = (tokens, idx, options, env, self) => self.renderToken(tokens, idx, options);
-  const defaultParagraphOpenRenderer = md.renderer.rules.paragraph_open || proxy;
-  const defaultParagraphCloseRenderer = md.renderer.rules.paragraph_close || proxy;
-  const defaultTextRenderer = md.renderer.rules.text || proxy;
-  const REGEX = /(<%%|<%=|<%-|<%_|<%#)(.*)(%>|-%>|_%>)/;
+  const REGEX_ONE_LINE = /(<%%|<%=|<%-|<%_|<%#)([\S\s]+)(%>|-%>|_%>)/g;
 
-  md.renderer.rules.paragraph_open = function(tokens, idx, options, env, self) {
-    // Since any variables being handled will be part of a paragraph we check for the opening
-    // of a paragraph.
-    // Now we want to check if our next item matches some regex for variable or includes.
-
-    if (REGEX.test(tokens[idx+1].content)) {
-      return "";
-    } else {
-      return defaultParagraphOpenRenderer(tokens, idx, options, env, self);
-    }
-
+  md.renderer.rules.ejs = function(tokens, idx, options, env, self) {
+    return tokens[idx].content;
   };
 
-  md.renderer.rules.text = function(tokens, idx, options, env, self) {
+  md.inline.ruler.after("text", "includeEJS", (state, silent) => {
+    let marker = state.src.charAt(state.pos);
+    let pos = state.pos;
+    let content = "";
 
-    if (REGEX.test(tokens[idx].content)) {
-      return tokens[idx].content;
-    } else {
-      return defaultTextRenderer(tokens, idx, options, env, self);
-    }
-  };
+    if (marker !== "<") { return false; }
 
-  md.renderer.rules.paragraph_close = function(tokens, idx, options, env, self) {
-    if (REGEX.test(tokens[idx-1].content)) {
-      return "";
-    } else {
-      return defaultParagraphCloseRenderer(tokens, idx, options, env, self);
+    if (!REGEX_ONE_LINE.test(state.src)) { return false; }
+
+    // Now we know our source is a valid EJS templating method
+
+    while(pos < state.posMax && state.src.charAt(pos) !== ">") {
+      pos++;
     }
-  };
+    // Since the above loop will cycle through all tokens until hitting the end
+    // token, but doesn't include it, we need to add one more
+    pos = pos + 1;
+
+    if (pos === state.pos) { return false; } // is empty token
+
+    if (!silent) { content += state.src.slice(state.pos, pos); }
+
+    state.pos = pos;
+
+    let token = state.push('ejs', '', 0);
+    token.content = content;
+
+    return true;
+  });
 };
