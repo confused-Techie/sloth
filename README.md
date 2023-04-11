@@ -338,3 +338,10 @@ Adds tasklist support as per the [GFM extension](https://github.github.com/gfm/#
 - [ ] bim
 
 ```
+
+## `markdown-it-code-copy`
+
+* [NPM](https://www.npmjs.com/package/@suehok/markdown-it-code-copy)
+* [GitHub](https://github.com/suehok/markdown-it-code-copy)
+
+Adds a copy icon in code blocks, to copy the code.
