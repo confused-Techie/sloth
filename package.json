@@ -41,6 +41,7 @@
     "markdown-it-named-code-blocks": "^0.1.0",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
+    "markdown-it-task-lists": "^2.1.1",
     "minify": "^9.2.0",
     "sass": "^1.60.0",
     "terser": "^5.16.8"

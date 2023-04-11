@@ -322,3 +322,19 @@ Here is a footnote reference,[^1] and another.[^longnote]
   footnote.
 
 ```
+
+## `markdown-it-task-lists`
+
+* [NPM](https://www.npmjs.com/package/markdown-it-task-lists)
+* [GitHub](https://github.com/revin/markdown-it-task-lists)
+
+Adds tasklist support as per the [GFM extension](https://github.github.com/gfm/#task-list-items-extension-)
+
+```markdown
+
+- [x] foo
+  - [ ] bar
+  - [x] baz
+- [ ] bim
+
+```
