@@ -11,44 +11,15 @@ const fm = require("front-matter");
 const { minify } = require("terser");
 const sass = require("sass");
 const CleanCSS = require("clean-css");
-const MarkdownIt = require("markdown-it");
-const markdownItContainer = require("markdown-it-container");
-const config = require("../site.config.js").config;
+const frontMatterPlugins = require("./front-matter-plugins.js");
+
+//let userConfig = JSON.parse(fs.readFileSync("./site.config.js"));
+let userConfig = require("../site.config.js");
+const config = userConfig.config;
 
 const DEV_MODE = process.env.NODE_ENV === "development" ? true : false;
 
-const md = require("../site.config.js").md ?? new MarkdownIt({
-  html: true
-}).use(require("markdown-it-include"), { // Allows including MD fragments
-  root: "./"
-}).use(require("markdown-it-expandable") // Adds `<details>` and `<summary>`
-).use(require("markdown-it-named-code-blocks"), { // Allows naming of code blocks
-  isEnableInlineCSS: true
-}).use(require("markdown-it-kbd") // Adds `<kbd>x</kbd>` support
-).use(require("markdown-it-attrs"), { // supply custom attributes
-  leftDelimiter: "{",
-  rightDelimiter: "}",
-  allowedAttributes: [] // empty array = all attributes are allowed
-}).use(require("markdown-it-highlightjs"), { // code highlighting
-  auto: false,
-  code: true,
-  inline: false
-}).use(require("markdown-it-ins") // ins support
-).use(require("markdown-it-sub") // subscript support
-).use(require("markdown-it-sup") // super script support
-).use(require("markdown-it-emoji"), { // emoji support
-
-}).use(require("markdown-it-fontawesome") // font awesome support
-).use(require("markdown-it-codetabs") // Codetabs support
-).use(require("markdown-it-footnote") // Footnote support
-).use(require("./markdown-it-del.js") // del support
-).use(require("./markdown-it-include-ejs.js"), { // allows including EJS docs
-  root: "./"
-}).use(markdownItContainer, // container block support
-  "warning" // each supported block has to be created seperately
-).use(markdownItContainer,
-  "info"
-);
+const md = userConfig.md ?? require("./markdown-export.js");
 
 let sidebar;
 
@@ -309,8 +280,8 @@ async function generatePageObject(file, pathArray, path, filename) {
 
   // Here we will generate some helpful universally available frontmatter components.
   const universalFrontMatter = {
-    _date: new Date().toDateString(),
-    _timeToRead: getTimeToRead(frontMatter.body)
+    _date: frontMatterPlugins.date(),
+    _timeToRead: frontMatterPlugins.timeToRead(frontMatter.body),
   };
 
   // Some common attribute safety checks
@@ -360,18 +331,24 @@ async function generateHTML(page, pageMap) {
     { ...page, content: html }
   );
 
-  return builtPage;
-}
+  // Now that the page is built, we need to handle any EJS that's embedded into the final page.
+  // Since EJS doesn't normally handle any EJS embedded into the `content` variable.
+  // For this we will use the string rendering, and will pass along all the same values.
 
-function getTimeToRead(content) {
-  // This is a rather simplistic view at attempting to determine the average time
-  // it will take someone to read a page.
+  const embeddedContent = await ejs.render(
+    builtPage,
+    {
+      ...page,
+      content: html
+    },
+    {
+      views: [
+        path.resolve(path.join(...viewPath))
+      ]
+    }
+  );
 
-  // First we will determine a word count.
-  let wordCount = content.trim().split(/\s+/).length;
-  let minutes = wordCount / 200; // The average adult reads 238 wpm, so lets go on the low end
-
-  return Math.round(minutes);
+  return embeddedContent;
 }
 
 main();

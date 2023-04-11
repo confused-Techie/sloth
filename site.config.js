@@ -1,7 +1,7 @@
 module.exports = {
   config: {
-    sourceDirectory: "./docs",
-    buildDirectory: "./dist",
+    sourceDirectory: "./test/source",
+    buildDirectory: "./test/dist",
     devPort: 8080,
     jsBuildDirectory: "./dist",
     jsSourceDirectory: "./assets/js",
@@ -19,8 +19,8 @@ module.exports = {
       //}
     //],
     staticBuildDirectory: "./dist",
-    sidebar: "./sidebar.json",
+    //sidebar: "./sidebar.json",
     defaultView: "home",
-    viewPagePath: "./views/pages"
+    viewPagePath: "./test/views/"
   }
 };

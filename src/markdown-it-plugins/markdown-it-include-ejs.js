@@ -4,8 +4,8 @@
 const path = require("path");
 const fs = require("fs");
 
-const INCLUDE_REG = /!{3}\s*includeEJS(.+?)!{3}/i;
-const BRACES_REG = /\((.+?)\)/i;
+const INCLUDE_REG = /<%-\s*include(.+?)\s*%>/i;
+const BRACES_REG = /\((.+?)(,.+)*\)/i;
 
 function _extends() {
   _extends = Object.assign || function(target) {
@@ -52,6 +52,7 @@ const include_ejs_plugin = (md, options) => {
     while(cap = options.includeReg.exec(src)) {
       let includePath = cap[1].trim();
       const sansBracesMatch = BRACES_REG.exec(includePath);
+      console.log(sansBracesMatch);
 
       if (!sansBracesMatch && !options.bracesAreOptional) {
         errorMessage = `INCLUDE_EJS statement '${src.trim()}' MUST have '()' braces around the include path ('${includePath}')`;
@@ -83,7 +84,7 @@ const include_ejs_plugin = (md, options) => {
         mdSrc = `\n\n# INCLUDE ERROR: ${errorMessage}\n\n`;
       } else {
         // now do the part where we insert data into the original file
-
+        console.log(filePath);
         mdSrc = fs.readFileSync(filePath, "utf8"); // check if child file aslo has includes
 
         mdSrc = _replaceIncludeEJSByContent(mdSrc, path.dirname(filePath), filePath, filesProcessed); // remove one trailing newline, if it exists: that way, the included content does not
@@ -102,7 +103,7 @@ const include_ejs_plugin = (md, options) => {
 
       src = src.slice(0, cap.index) + mdSrc + src.slice(cap.index + cap[0].length, src.length);
     }
-
+    console.log(src);
     return src;
   };
 
@@ -111,6 +112,43 @@ const include_ejs_plugin = (md, options) => {
   };
 
   md.core.ruler.before("normalize", "includeEJS", _includeFilePartsEJS);
+
+
+  const proxy = (tokens, idx, options, env, self) => self.renderToken(tokens, idx, options);
+  const defaultParagraphRenderer = md.renderer.rules.paragraph || proxy;
+  const REGEX = /(<%%|<%=|<%-|<%_|<%#)(.*)(%>|-%>|_%>)/;
+
+  md.renderer.rules.paragraph_open = function(tokens, idx, options, env, self) {
+    // Since any variables being handled will be part of a paragraph we check for the opening
+    // of a paragraph.
+    // Now we want to check if our next item matches some regex for variable or includes.
+
+    if (REGEX.test(tokens[idx+1].content)) {
+      return tokens[idx+1].content;
+    } else {
+      return defaultParagraphRenderer(tokens, idx, options, env, self);
+    }
+
+  };
+
+  md.renderer.rules.text = function(tokens, idx, options, env, self) {
+
+    if (REGEX.test(tokens[idx].content)) {
+      return "";
+    } else {
+      return defaultParagraphRenderer(tokens, idx, options, env, self);
+    }
+  };
+
+  md.renderer.rules.paragraph_close = function(tokens, idx, options, env, self) {
+
+    if (REGEX.test(tokens[idx-1].content)) {
+      return "";
+    } else {
+      return defaultParagraphRenderer(tokens, idx, options, env, self);
+    }
+  };
+
 };
 
 module.exports = include_ejs_plugin;

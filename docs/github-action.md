@@ -1,3 +1,10 @@
+# Recommended GitHub Action
+
+As Sloth doesn't want to do much of anything, there isn't a premade GitHub Action that can be used.
+
+Instead it's recommended to use GitHub's Actions themselves, with the following `./github/workflows/deploy.yml` file:
+
+```yaml
 name: Deploy to GitHub Pages
 
 on:
@@ -42,3 +49,7 @@ jobs:
     - name: Deploy to GitHub pages
       id: deployment
       uses: actions/deploy-pages@v2
+
+```
+
+Where keep in mind the step `Upload Artifact` the `path` should be where ever your `buildDirectory` is.
