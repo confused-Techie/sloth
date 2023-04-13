@@ -201,12 +201,7 @@ async function main() {
         return;
       }
 
-      let output = sass.compile(
-        file,
-        {
-          loadPaths: path.join(process.cwd(), config.cssSourceDirectory) // Used to instruct where `@use` looks
-        }
-      );
+      let output = sass.compile(file);
 
       fs.writeFileSync(path.join(config.cssBuildDirectory, ...pathArray, filename.replace(".scss", ".css")), output.css, {
         encoding: "utf8",
