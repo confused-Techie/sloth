@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const path = require("path");
 const userConfig = require(path.join(process.cwd(), "./site.config.js"));
 
 const app = express();

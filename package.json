@@ -17,7 +17,8 @@
   "author": "confused-Techie",
   "license": "MIT",
   "bin": {
-    "serve": "./bin/serve.js"
+    "sloth-serve": "./bin/serve.js",
+    "sloth-build": "./bin/build.js"
   },
   "nodemonConfig": {
     "ext": "js,json,md,ejs,css,scss",

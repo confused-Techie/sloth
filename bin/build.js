@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
 (async() => {
-  await require("../src/dev-server.js");
+  await require("../src/build.js");
 })();
