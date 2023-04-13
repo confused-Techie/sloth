@@ -1,14 +1,14 @@
 const express = require("express");
 const fs = require("fs");
-const config = require("../site.config.js").config;
+const userConfig = require(path.join(process.cwd(), "./site.config.js"));
 
 const app = express();
 
 let serve;
 
-let port = config.devPort ?? 8080;
+let port = userConfig.config.devPort ?? 8080;
 
-app.use("/", express.static("dist"));
+app.use("/", express.static(path.join(process.cwd(), userConfig.config.buildDirectory)));
 
 function startListener() {
   serve = app.listen(port, () => {

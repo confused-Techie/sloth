@@ -16,6 +16,9 @@
   ],
   "author": "confused-Techie",
   "license": "MIT",
+  "bin": {
+    "sloth-serve": "npm run start:dev"
+  },
   "nodemonConfig": {
     "ext": "js,json,md,ejs,css,scss",
     "ignore": [
