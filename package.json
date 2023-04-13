@@ -16,6 +16,9 @@
   ],
   "author": "confused-Techie",
   "license": "MIT",
+  "bin": {
+    "serve": "./bin/serve.js"
+  },
   "nodemonConfig": {
     "ext": "js,json,md,ejs,css,scss",
     "ignore": [
