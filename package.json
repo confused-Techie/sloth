@@ -1,7 +1,7 @@
 {
-  "name": "pulsar-docs",
+  "name": "sloth",
   "version": "1.0.0",
-  "description": "Proof of Concept: The laziest and least opinionated Static Site Builder",
+  "description": "The laziest and least opinionated Static Site Builder",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
