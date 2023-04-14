@@ -10,7 +10,7 @@ let serve;
 
 let port = userConfig.config.devPort ?? 8080;
 
-LiveReloadExpress.use("/", express.static(path.join(process.cwd(), userConfig.config.buildDirectory)));
+app.use("/", LiveReloadExpress.static(path.join(process.cwd(), userConfig.config.buildDirectory)));
 
 function startListener() {
   serve = LiveReloadExpress.listen(port, () => {
