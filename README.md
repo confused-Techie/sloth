@@ -96,6 +96,9 @@ Within it there are a few values used to direct the whole the process:
   - `json`
 * `defaultView`: Allows specifying the name of a default EJS view when the frontmatter of a doc doesn't specify one. Should only define the filename itself, without any extension. e.g. `./views/partials/home.ejs` => `"defaultView": "home"`
 * `viewPagePath`: This is the path to your full EJS pages. By default `./views/pages`
+* `templates`: An object that allows you to specify what static asset files you'd like included into the final build. This way many boiler plate files can be included directly into your final build without ever having to write them. Each key of the object is an enum of valid files to request, where it could either be a boolean where if true, will add the file to the root of your build directory, or could be a string, where the file will be added to that path. Valid values:
+  - `nojekyll`: Add the `.nojekyll` file, recommended if using GitHub Pages.
+  - `robots`: Add a `robots.txt` file.
 
 ## Markdown Frontmatter
 

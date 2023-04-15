@@ -12,6 +12,7 @@ const { minify } = require("terser");
 const sass = require("sass");
 const CleanCSS = require("clean-css");
 const frontMatterPlugins = require("./front-matter-plugins.js");
+const templateAdd = require("./template-add.js");
 
 const userConfig = require(path.join(process.cwd(), "./site.config.js"));
 const config = userConfig.config;
@@ -249,6 +250,31 @@ async function main() {
   } else {
     if (userConfig.options.verbose) {
       console.log("No valid CSS source directory found, skipping...");
+    }
+  }
+
+  // Now to check if the user would like template files
+  if (typeof config.templates === "object") {
+    // we know they want templates, but will now need to check each item.
+
+    let templates = [
+      {
+        name: "nojekyll",
+        file: ".nojekyll"
+      },
+      {
+        name: "robots",
+        file: "robots.txt"
+      }
+    ];
+
+    for (const temp of templates) {
+      await templateAdd(temp, config);
+    }
+
+  } else {
+    if (userConfig.options.verbose) {
+      console.log("Adding Templates is not enabled, skipping...");
     }
   }
 
