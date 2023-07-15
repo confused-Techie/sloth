@@ -34,4 +34,5 @@ module.exports = new MarkdownIt({
   "warning" // each supported block has to be created seperately
 ).use(markdownItContainer,
   "info"
+).use(require("./markdown-it-plugins/markdown-it-tabs.js")
 );

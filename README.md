@@ -348,3 +348,26 @@ Adds tasklist support as per the [GFM extension](https://github.github.com/gfm/#
 * [GitHub](https://github.com/suehok/markdown-it-code-copy)
 
 Adds a copy icon in code blocks, to copy the code.
+
+## `tabs`
+
+Adds support for tabs within Markdown. Implemented similarly to how Mister Hope's Vuepress Hope theme functions.
+
+Supporting content such as:
+
+```markdown
+::: tabs#fruit
+
+@tab title 1
+
+<!-- tab 1 content -->
+
+@tab title 2
+
+<!-- tab 2 content -->
+
+@tab title 3
+
+<!-- tab 3 content -->
+:::
+```

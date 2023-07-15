@@ -82,6 +82,11 @@ async function main() {
   // we can go ahead and cycle through our page map and generate pages as needed,
   // now with a global store of all other pages to be able to generate data from if needed.
 
+  // But first we will check if there is a custom sidebar builder
+  if (typeof config.buildSidebar === "function") {
+    config.buildSidebar(pageMap, config);
+  }
+
   for (const page in pageMap) {
     let content = await generateHTML(pageMap[page], pageMap);
 
