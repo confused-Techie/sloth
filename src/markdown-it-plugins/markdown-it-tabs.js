@@ -28,7 +28,7 @@ module.exports = function tabs_plugin(md) {
 <Tabs id="${index}" :data='${stringifyProp(tabsData)}'${
         active !== -1 ? ` :active="${active}"` : ""
       }${
-        meta.id ? ` tab-id="${meta.id as string}"` : ""
+        meta.id ? ` tab-id="${meta.id}"` : ""
       }>
 ${titles
   .map(
